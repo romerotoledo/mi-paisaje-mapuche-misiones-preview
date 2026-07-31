@@ -28,6 +28,7 @@ Se ejecutó `index.html` desde un servidor HTTP local y se controló la página 
 - Un niño fue seleccionado, recorrió el tablero evitando el agua y volvió a la entrada de la ruka.
 - Los anillos de selección y destino, el estado “va en camino” y los mensajes de llegada se mostraron correctamente.
 - La consola de la página permaneció sin errores ni advertencias durante los desplazamientos. Los únicos mensajes ajenos observados provenían de una extensión del navegador y no de la página.
+- La nueva frase musical de kultrun y pifilca sintetizados se activó después de una interacción, completó más de un ciclo y pudo apagarse y encenderse nuevamente sin errores de la página.
 
 ## Validado automáticamente
 

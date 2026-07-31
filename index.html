@@ -148,7 +148,7 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
     <div class="missionValue" id="m2relation">El paisaje está comenzando a organizarse.</div>
   </div>
   <button id="freeMode">Entrar al modo paisaje libre</button>
-  <p class="sourceNote">🔊 Cada término se lee tal como está escrito, usando la voz española más natural disponible en el dispositivo. El mapuzugun posee variantes territoriales y sonidos que requieren validación de hablantes. La ambientación musical es original y no reproduce cantos ceremoniales.</p>
+  <p class="sourceNote">🔊 Cada término se lee tal como está escrito, usando la voz española más natural disponible en el dispositivo. El mapuzugun posee variantes territoriales y sonidos que requieren validación de hablantes. La ambientación es una composición contemporánea original con percusión y flauta sintetizadas, inspiradas en timbres de kultrun y pifilca; no reproduce cantos ni melodías ceremoniales.</p>
 </section>
 
 <div id="helpChip">👆 Toca un ser vivo para moverlo · ✋ Arrastra · 🤏 Pellizca</div>
@@ -880,7 +880,7 @@ function showRelationFeedback(type,i,k){
   if(general)return showLandscapeFeedback(`general-${type}`,general,22000,1);
   return false;
 }
-let audioCtx=null,musicTimer=null,musicStep=0;
+let audioCtx=null,musicTimer=null,musicStep=0,audioNoiseBuffer=null,musicOutput=null;
 function getAudioContext(){
   const AudioEngine=window.AudioContext||window.webkitAudioContext;if(!AudioEngine)return null;
   if(!audioCtx)audioCtx=new AudioEngine();
@@ -889,14 +889,30 @@ function getAudioContext(){
 function tone(freq,when,duration,volume,type='sine'){
   const ctx=getAudioContext();if(!ctx)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.0001,when);g.gain.exponentialRampToValueAtTime(volume,when+.035);g.gain.exponentialRampToValueAtTime(.0001,when+duration);o.connect(g);g.connect(ctx.destination);o.start(when);o.stop(when+duration+.03);
 }
-function musicPulse(){
-  if(!soundOn||!audioCtx)return;const now=audioCtx.currentTime+.02,notes=[196,220,247,220,174,196];
-  tone(notes[musicStep%notes.length],now,1.7,.012,'sine');
-  if(musicStep%2===0){tone(82,now,.18,.022,'triangle');tone(62,now+.3,.12,.012,'sine')}
-  musicStep++;
+function getMusicOutput(ctx){if(!musicOutput){musicOutput=ctx.createGain();musicOutput.gain.value=.72;musicOutput.connect(ctx.destination)}return musicOutput}
+function getNoiseBuffer(ctx){
+  if(audioNoiseBuffer)return audioNoiseBuffer;const length=Math.floor(ctx.sampleRate*.7);audioNoiseBuffer=ctx.createBuffer(1,length,ctx.sampleRate);const data=audioNoiseBuffer.getChannelData(0);
+  for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*(1-i/length);return audioNoiseBuffer;
 }
-function startMusic(){if(!soundOn||musicTimer)return;if(!getAudioContext())return;musicPulse();musicTimer=setInterval(musicPulse,2400)}
-function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}}
+function kultrunBeat(when,accent=1){
+  const ctx=getAudioContext();if(!ctx)return;const body=ctx.createOscillator(),bodyGain=ctx.createGain(),skin=ctx.createBufferSource(),skinFilter=ctx.createBiquadFilter(),skinGain=ctx.createGain();
+  body.type='sine';body.frequency.setValueAtTime(112,when);body.frequency.exponentialRampToValueAtTime(48,when+.42);bodyGain.gain.setValueAtTime(.0001,when);bodyGain.gain.exponentialRampToValueAtTime(.045*accent,when+.012);bodyGain.gain.exponentialRampToValueAtTime(.0001,when+.48);
+  skin.buffer=getNoiseBuffer(ctx);skinFilter.type='bandpass';skinFilter.frequency.value=520;skinFilter.Q.value=.72;skinGain.gain.setValueAtTime(.016*accent,when);skinGain.gain.exponentialRampToValueAtTime(.0001,when+.18);
+  const output=getMusicOutput(ctx);body.connect(bodyGain);bodyGain.connect(output);skin.connect(skinFilter);skinFilter.connect(skinGain);skinGain.connect(output);body.start(when);skin.start(when);body.stop(when+.52);skin.stop(when+.22);
+}
+function pifilcaNote(freq,when,duration=.52,accent=1){
+  const ctx=getAudioContext();if(!ctx)return;const voice=ctx.createOscillator(),air=ctx.createOscillator(),gain=ctx.createGain(),filter=ctx.createBiquadFilter();
+  voice.type='sine';voice.frequency.setValueAtTime(freq,when);voice.frequency.linearRampToValueAtTime(freq*1.008,when+duration);air.type='triangle';air.frequency.setValueAtTime(freq*2.01,when);
+  gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(.018*accent,when+.055);gain.gain.setValueAtTime(.014*accent,when+Math.max(.08,duration-.12));gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+  filter.type='lowpass';filter.frequency.value=2600;filter.Q.value=.55;voice.connect(gain);air.connect(gain);gain.connect(filter);filter.connect(getMusicOutput(ctx));voice.start(when);air.start(when);voice.stop(when+duration+.03);air.stop(when+duration+.03);
+}
+function musicPulse(){
+  if(!soundOn||!audioCtx)return;const now=audioCtx.currentTime+.04,phrases=[[392,440,523.25,587.33],[523.25,440,392,349.23]],phrase=phrases[musicStep%phrases.length];
+  [0,.48,.96,1.44,1.92].forEach((offset,index)=>kultrunBeat(now+offset,index===0||index===4?1:.72));
+  phrase.forEach((freq,index)=>pifilcaNote(freq,now+.16+index*.48,index===3?.68:.5,index===0?1:.86));musicStep++;
+}
+function startMusic(){if(!soundOn||musicTimer)return;const ctx=getAudioContext();if(!ctx)return;const output=getMusicOutput(ctx);output.gain.cancelScheduledValues(ctx.currentTime);output.gain.setTargetAtTime(.72,ctx.currentTime,.035);musicPulse();musicTimer=setInterval(musicPulse,2480)}
+function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}if(audioCtx&&musicOutput){musicOutput.gain.cancelScheduledValues(audioCtx.currentTime);musicOutput.gain.setTargetAtTime(.0001,audioCtx.currentTime,.025)}}
 let speechVoices=[];
 function updateSpeechVoices(){speechVoices=speechSynthesis.getVoices()||[]}
 function speechVoiceScore(voice){
