@@ -22,6 +22,8 @@ La arquitectura ya reconoce los tipos futuros `swan`, `bandurria` y `frog` para 
 
 ## Audio
 
+La ambientación del prototipo combina un pulso grave de membrana sintetizada, inspirado en el timbre del kultrun, con una melodía de flauta sintetizada inspirada en la pifilca. Es una composición contemporánea original creada para el juego: no reproduce una pieza tradicional, un canto ni una secuencia ceremonial. El sonido se genera localmente mediante Web Audio y comienza después de la primera interacción para cumplir las restricciones de reproducción de Safari en iPhone y iPad.
+
 La versión actual no contiene grabaciones de voz: el juego lee cada término exactamente como aparece escrito y elige la voz española mejor puntuada entre las disponibles en el dispositivo. Prioriza voces chilenas o latinoamericanas y variantes identificadas como naturales, mejoradas o premium, con velocidad y tono cercanos al habla normal. La disponibilidad y el timbre varían entre Safari, Chrome y cada sistema operativo.
 
 Esta mejora evita separar o reemplazar sílabas, pero una voz española no reproduce necesariamente todos los sonidos del mapuzugun. La validación lingüística y una pronunciación auténtica requieren grabaciones de hablantes.
