@@ -1,8 +1,8 @@
-# Mi paisaje mapuche
+# Mi paisaje mapuche móvil
 
 Juego educativo 3D para construir un paisaje mapuche y conocer elementos naturales, productivos, domésticos, ceremoniales y sociales.
 
-Esta rama contiene un prototipo experimental de movimiento libre. Después de colocar una persona o un animal, se toca su figura para seleccionarla y luego se toca otra casilla para indicar el destino. Las personas y los animales terrestres buscan una ruta que evita el agua y las piezas que bloquean el paso; el cóndor y el halcón pueden sobrevolarlas.
+Este proyecto independiente contiene un prototipo experimental de movimiento libre. Después de colocar una persona o un animal, se toca su figura para seleccionarla y luego se toca otra casilla para indicar el destino. Las personas y los animales terrestres buscan una ruta que evita el agua y las piezas que bloquean el paso; el cóndor y el halcón pueden sobrevolarlas.
 
 Los chiliwekes, gallinas y otros animales pueden entrar en un malal al tocar la empalizada o el recinto comunitario como destino. Niñas, niños y otras personas pueden explorar el tablero y volver a la ruka. Un anillo amarillo identifica la figura seleccionada y otro verde muestra el destino. Las categorías están desbloqueadas desde el inicio para facilitar la prueba del prototipo.
 
@@ -31,6 +31,8 @@ Cuando existan grabaciones validadas por hablantes, se podrán añadir sin bloqu
 ## Publicación
 
 El workflow `Deploy static site to GitHub Pages` publica el contenido de la rama `main` en GitHub Pages. En la configuración del repositorio, selecciona **Settings → Pages → Source → GitHub Actions** si GitHub no lo hace automáticamente.
+
+Sitio independiente: `https://romerotoledo.github.io/mi-paisaje-mapuche-movil/`.
 
 ## Validación
 
