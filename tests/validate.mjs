@@ -52,12 +52,12 @@ assert.doesNotMatch(html, /(?:machi|lonko):\{cat:'social'/);
 assert.doesNotMatch(html, /child:\{cat:'social'/);
 const piecesSource = html.slice(html.indexOf("const pieces={"), html.indexOf("let category="));
 const categoryIds = category => [...piecesSource.matchAll(new RegExp(`(\\w+):\\{cat:'${category}'`, "g"))].map(match => match[1]).sort();
-assert.deepEqual(categoryIds("social"), ["boy", "elder", "girl", "man", "woman"]);
-assert.deepEqual(categoryIds("ceremonial"), ["foye", "kuel", "kultrun", "lonko", "machi", "rewe"]);
+assert.deepEqual(categoryIds("social"), ["boy", "elder", "girl", "kona", "man", "toki", "woman"]);
+assert.deepEqual(categoryIds("ceremonial"), ["foye", "ketruMetawe", "kuel", "kultrun", "lonko", "machi", "menkuwe", "rewe"]);
 assert.match(html, /mapu:'Lonko',es:'Autoridad comunitaria'/);
 assert.match(html, /mapu:'Foye',es:'Canelo'/);
 assert.match(html, /function palisade\(\)/);
-assert.match(html, /es:'Empalizada'/);
+assert.match(html, /es:'Corral de empalizada'/);
 assert.match(html, /fort:\{cat:'arquitectura'/);
 assert.match(html, /mapu:'Malal',es:'Recinto comunitario'/);
 assert.doesNotMatch(html, /recinto fortificado|fortificación|comprender la defensa/i);
@@ -79,7 +79,7 @@ assert.match(html, /mapu\.rate=\.84;mapu\.pitch=1/);
 assert.match(html, /se lee solamente su nombre en mapudungun/);
 assert.doesNotMatch(html, /SpeechSynthesisUtterance\(pieces\[id\]\.es\)/, "La voz no debe leer el nombre en español");
 assert.doesNotMatch(html, /const pronunciations=/);
-assert.match(html, /src="\.\/relations\.js\?v=20260802-2"/);
+assert.match(html, /src="\.\/relations\.js\?v=20260802-3"/);
 for (const fn of [
   "getObjectsByType", "getObjectsByCategory", "gridDistance", "isNear",
   "isNearAny", "countNearby", "getNearbyObjects", "evaluateMalalProtection",
@@ -156,7 +156,7 @@ for (const fn of [
   "selectMover", "startMovement", "updateActiveMovement", "finishMovement", "restoreMove",
 ]) assert.match(html, new RegExp(`function ${fn}\\(`), `${fn} debe existir`);
 assert.match(html, /wildAnimalTypes\.has\(record\.type\)\)return false/);
-assert.match(html, /domesticAnimalTypes\.has\(record\.type\)\)return host\.type==='fence'\|\|host\.type==='fort'/);
+assert.match(html, /domesticAnimalTypes\.has\(record\.type\)\)return host\.type==='fence'/);
 assert.match(html, /humanMovers\.has\(record\.type\).*host\.type==='ruka'\|\|host\.type==='fort'/s);
 assert.match(html, /function animalHabitatAllows\(/);
 assert.match(html, /function predatorConflict\(/);
@@ -169,5 +169,18 @@ assert.match(html, /reservedDestinations/);
 assert.match(html, /op:'move'/);
 assert.match(html, /updateActiveMovement\(delta\)/);
 assert.match(html, /id="moveStatus"/);
+for (const id of ["quinoa", "ketruMetawe", "menkuwe", "kona", "toki"]) {
+  assert.match(html, new RegExp(`${id}:\\{cat:`), `${id} debe existir`);
+}
+assert.match(html, /Gran misión 3 · Crear el paisaje del lof/);
+assert.match(html, /lofSocial:\{label:'Vida social del lof'/);
+assert.match(html, /lofPublic:\{label:'Espacio público y ceremonial'/);
+assert.match(html, /function spawnLofIntruder\(\)/);
+assert.match(html, /record\.intruder=true/);
+assert.match(html, /record\.k<=2/);
+assert.match(html, /Este animal debe volver manualmente al borde natural/);
+assert.match(html, /isNear\('foye','rewe',2\)/);
+assert.match(html, /isNear\('kultrun','machi',2\)/);
+assert.match(html, /Grandes misiones <strong>\$\{grandCompleted\}\/3/);
 
 console.log("OK: HTML estático, relaciones, animaciones reutilizables, audio, recursos y controles táctiles validados.");

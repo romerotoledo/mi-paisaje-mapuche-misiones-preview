@@ -1,6 +1,6 @@
 # Mi paisaje mapuche · Misiones ecológicas
 
-Vista previa jugable con dos grandes misiones ecológicas.
+Vista previa jugable con tres grandes misiones ecológicas y comunitarias.
 
 En la **Gran misión 1 · Conociendo el paisaje**, el jugador construye por separado tres pisos ecológicos:
 
@@ -10,7 +10,14 @@ En la **Gran misión 1 · Conociendo el paisaje**, el jugador construye por sepa
 
 En la **Gran misión 2 · Conectar la naturaleza**, los tres paisajes se construyen en un mismo tablero. La cordillera, el valle y la costa ocupan zonas distintas y una trayectoria de agua dulce permite observar su conexión con el mar.
 
-El tablero aplica reglas ecológicas: cada animal solo puede ubicarse y desplazarse dentro de su piso correspondiente; la fauna silvestre no puede entrar al corral; y los demás animales mantienen distancia del puma y del zorro. Toda la fauna muestra de manera continua respiración, balanceo o pequeños giros, mientras las aves voladoras conservan sus vuelos periódicos y las demás especies mantienen sus gestos particulares.
+En la **Gran misión 3 · Crear el paisaje del lof** hay dos submisiones:
+
+1. Vida social: ruka, fogón, metawe, corral de empalizada, cultivos de maíz, papa y dawe o quinoa, chiliweke, gallinas y la familia completa. Dos personas mayores representan a los abuelos. Un zorro o puma puede aparecer ocasionalmente junto al poblado; el jugador debe tocarlo y devolverlo manualmente a la franja de bosque que representa su medio natural.
+2. Espacio público y ceremonial: rewe, kuel, malal comunitario, foye, kultrung, lonko, machi, kona, toki y dos formas cerámicas: ketru metawe y meñkuwe. Para completar la misión, el foye debe quedar junto al rewe y el kultrung cerca de la machi.
+
+El tablero aplica reglas ecológicas: cada animal solo puede ubicarse y desplazarse dentro de su piso correspondiente en las misiones ecológicas; la fauna silvestre no puede entrar al corral; solo gallinas y chiliweke pueden ocuparlo; y los demás animales mantienen distancia del puma y del zorro. Toda la fauna muestra de manera continua respiración, balanceo o pequeños giros, mientras las aves voladoras conservan sus vuelos periódicos y las demás especies mantienen sus gestos particulares.
+
+Las nuevas cerámicas se representan con descripciones prudentes basadas en referencias del Museo Chileno de Arte Precolombino y del Servicio Nacional del Patrimonio Cultural. La propuesta visual y lingüística continúa siendo un prototipo que debe validarse con especialistas y hablantes.
 
 El paisaje también tiene ciclos ambientales intermitentes: una nube cruza el tablero dejando lluvia, el volcán libera bocanadas de humo y una brisa mueve suavemente los árboles.
 
