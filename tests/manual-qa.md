@@ -50,6 +50,9 @@ Se ejecutó `index.html` desde un servidor HTTP local y se controló la página 
 - Espacio público sí mostró kona y toki en la categoría Social.
 - En Vida social y Espacio público apareció una sola secuencia de nubes lluviosas múltiples y un temblor suave; ambos eventos conservaron la respuesta táctil y no registraron errores de consola.
 - La condición de Vida social exige 18 tipos de elementos, dos abuelos, zorro y puma devueltos y todos los chiliweke dentro del corral. Espacio público exige sus 13 tipos y dos chemamüll, sin condiciones de proximidad adicionales.
+- Se reprodujo la aparición del intruso en 390 × 844 px. El animal quedó fuera de la paleta y de la columna de controles; el primer toque mostró “Pangui/Ngürü seleccionado” aun cuando había una persona cerca. El segundo toque usa una ruta automática hacia una casilla libre del borde natural.
+- El temblor de Vida social y Espacio público queda programado entre 175 y 190 segundos después de iniciar cada etapa.
+- Vida social y Espacio público reutilizan la celebración de las misiones anteriores: mensaje explícito, tono de logro y 70 piezas de confeti.
 - Eltun y Chemamüll aparecen en Ceremoniales. Ambos se colocaron realmente en casillas vecinas y el progreso reconoció la relación `chemamüll/eltun` y el conteo 1/2.
 - La representación del eltun utiliza montículos, vegetación y un borde de piedras, sin cruces genéricas; el chemamüll se representa como una figura antropomorfa tallada en madera.
 - Paisaje completo abrió las siete categorías y mostró el progreso `0 de 7 categorías utilizadas`, sin restringir la biblioteca de elementos.

@@ -526,7 +526,7 @@ function updateRainCloud(delta){
   if(activeClouds.every(cloud=>!cloud.visible)){rainActive=false;rainElapsed=0;if(stageWeather){stageRainCompleted=true;nextRain=Infinity}else nextRain=24+Math.random()*22}
 }
 function resetStageEvents(floor=activeFloor){
-  scene.position.set(0,0,0);earthquakeElapsed=0;earthquakeState=['lofSocial','lofPublic'].includes(floor)&&!freeMode?'waiting':'off';nextEarthquake=earthquakeState==='waiting'?9+Math.random()*8:Infinity;resetRainCloud();
+  scene.position.set(0,0,0);earthquakeElapsed=0;earthquakeState=['lofSocial','lofPublic'].includes(floor)&&!freeMode?'waiting':'off';nextEarthquake=earthquakeState==='waiting'?175+Math.random()*15:Infinity;resetRainCloud();
 }
 function updateEarthquake(delta,time){
   if(earthquakeState==='off'||earthquakeState==='done'){scene.position.set(0,0,0);return}
@@ -1118,6 +1118,10 @@ function startMovement(record,i,k,host=null){
   const oldOffset={x:record.mesh.position.x,z:record.mesh.position.z};record.mesh.userData.isMoving=true;reservedDestinations.add(key(i,0,k));destinationRing.position.set(i,.04,k);destinationRing.visible=true;
   activeMove={record,path,segment:0,progress:0,destination:{i,k},host,from:{i:record.i,j:record.j,k:record.k,host:record.host,x:oldOffset.x,z:oldOffset.z}};updateMoverStatus();beep(540,.06);return true;
 }
+function nearestNaturalCell(record){
+  const candidates=[];for(let k=0;k<=2;k++)for(let i=0;i<N;i++)candidates.push({i,k,distance:Math.hypot(record.i-i,record.k-k)});candidates.sort((a,b)=>a.distance-b.distance);
+  return candidates.find(cell=>movementCellAvailable(record,cell.i,cell.k,true,null)&&findMovePath(record,cell.i,cell.k,null));
+}
 function restoreMove(record,state){
   if(!record||!world.has(key(record.i,record.j,record.k)))return false;
   const occupied=world.get(key(state.i,state.j,state.k));if(occupied&&occupied!==record)return false;
@@ -1144,7 +1148,7 @@ function remove(i,j,k){
   if(activeMove&&activeMove.record===r)cancelActiveMovement();if(selectedMover===r)clearMoverSelection();
   for(let a=animated.length-1;a>=0;a--)if(animated[a].mesh===r.mesh){resetAnimatedEntry(animated[a]);animated.splice(a,1)}
   clearIndicatorsForMesh(r.mesh);
-  scene.remove(r.mesh);removeTarget(r.collider);if(r.collider!==r.mesh)scene.remove(r.collider);
+  scene.remove(r.mesh);removeTarget(r.collider);if(r.touchTargets)r.touchTargets.forEach(removeTarget);if(r.collider!==r.mesh)scene.remove(r.collider);
   if(r.collider!==r.mesh&&r.collider.material)r.collider.material.dispose();
   if(pieces[r.type]&&pieces[r.type].kind!=='block')r.mesh.traverse(child=>{
     if(!child.isMesh)return;
@@ -1182,7 +1186,7 @@ initialWorld();
 createClouds();
 createRainCloud();resetRainCloud();
 
-const target=new THREE.Vector3((N-1)/2,.55,(N-1)/2);let radius=20.5,theta=-.72,phi=.98;
+const target=new THREE.Vector3((N-1)/2,.55,(N-1)/2),intruderSpawnProjection=new THREE.Vector3();let radius=20.5,theta=-.72,phi=.98;
 function updateCamera(){
   phi=Math.max(.28,Math.min(1.4,phi));radius=Math.max(9,Math.min(37,radius));
   camera.position.set(target.x+radius*Math.sin(phi)*Math.cos(theta),target.y+radius*Math.cos(phi),target.z+radius*Math.sin(phi)*Math.sin(theta));
@@ -1248,6 +1252,7 @@ function openInfo(id){
   pronounce(id);
 }
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2100)}
+function celebrateLofStage(message){toast(message);beep(840,.18);confetti(70)}
 const feedbackTimes=new Map();let lastFeedbackAt=0,lastFeedbackPriority=-1;
 function showLandscapeFeedback(messageId,text,cooldown=16000,priority=1){
   const now=Date.now(),previous=feedbackTimes.get(messageId)||0;
@@ -1420,13 +1425,13 @@ function evaluate(silent=false){
     const c=countTypes(),found=lofSocialRequired.filter(type=>(c[type]||0)>0),elders=Math.min(2,c.elder||0),camelids=[...world.values()].filter(record=>record.type==='camelid'),camelidsCorral=camelids.length>0&&camelids.every(record=>record.host==='fence'),intrudersClear=intrusionsResolved===2&&![...world.values()].some(record=>record.intruder),wasDone=lofProgress.social;
     lofProgress.social=found.length===lofSocialRequired.length&&elders===2&&camelidsCorral&&intrudersClear;
     $('#progress-lofSocial').textContent=`${found.length} de ${lofSocialRequired.length} elementos · ${elders}/2 abuelos · ${camelidsCorral?'✓ chiliweke en corral':'chiliweke al corral'} · ${intrusionsResolved}/2 intrusos devueltos`;
-    updateFloorCards();if(!silent&&lofProgress.social&&!wasDone){toast('🏡 ¡Completaste la vida social del lof!');beep(780,.16);confetti(45)}return;
+    updateFloorCards();if(!silent&&lofProgress.social&&!wasDone)celebrateLofStage('🏡 ¡Completaste la vida social del lof!');return;
   }
   if(activeFloor==='lofPublic'){
     const c=countTypes(),found=lofPublicRequired.filter(type=>(c[type]||0)>0),chemamullCount=Math.min(2,c.chemamull||0),wasDone=lofProgress.public;
     lofProgress.public=found.length===lofPublicRequired.length&&chemamullCount===2;
     $('#progress-lofPublic').textContent=`${found.length} de ${lofPublicRequired.length} elementos desplegados · ${chemamullCount}/2 chemamüll`;
-    updateFloorCards();if(!silent&&lofProgress.public&&!wasDone){toast('🥁 ¡Completaste el espacio público y ceremonial!');beep(860,.18);confetti(55)}return;
+    updateFloorCards();if(!silent&&lofProgress.public&&!wasDone)celebrateLofStage('🥁 ¡Completaste el espacio público y ceremonial!');return;
   }
   if(activeFloor==='lofAll'){
     const used=new Set();world.forEach(record=>{if(record.j>0&&pieces[record.type])used.add(pieces[record.type].cat)});const wasDone=lofProgress.all;
@@ -1442,9 +1447,12 @@ function evaluate(silent=false){
 function spawnLofIntruder(){
   if(activeFloor!=='lofSocial'||freeMode||intrusionsSpawned>=2||[...world.values()].some(record=>record.intruder))return false;
   const villageCount=[...world.values()].filter(record=>record.j>0&&!['forest','hill','puma','fox'].includes(record.type)).length;if(villageCount<4){nextIntrusionAt=Date.now()+8000;return false}
-  const candidates=[];for(let k=7;k<=10;k++)for(let i=1;i<N-1;i++)if(!world.has(key(i,1,k))&&!getMoversAtCell(i,k).length)candidates.push({i,k});
-  if(!candidates.length){nextIntrusionAt=Date.now()+10000;return false}
-  const cell=candidates[Math.floor(Math.random()*candidates.length)],type=intrusionOrder[intrusionsSpawned++];place(cell.i,1,cell.k,type);const record=world.get(key(cell.i,1,cell.k));record.intruder=true;nextIntrusionAt=Infinity;showObjectIndicator({mesh:record.mesh},'suggestion',7000);toast(`⚠️ Apareció ${pieces[type].mapu}: tócalo y llévalo al borde natural`);beep(310,.2);evaluate(true);return true;
+  const candidates=[],fallback=[];for(let k=4;k<=7;k++)for(let i=2;i<N-2;i++)if(!world.has(key(i,1,k))&&!getMoversAtCell(i,k).length){
+    const cell={i,k};fallback.push(cell);intruderSpawnProjection.set(i,1,k).project(camera);const screenX=(intruderSpawnProjection.x+1)*innerWidth/2,screenY=(1-intruderSpawnProjection.y)*innerHeight/2;
+    if(screenX>72&&screenX<innerWidth-92&&screenY>150&&screenY<innerHeight-235)candidates.push(cell);
+  }
+  const pool=candidates.length?candidates:fallback;if(!pool.length){nextIntrusionAt=Date.now()+10000;return false}
+  const cell=pool[Math.floor(Math.random()*pool.length)],type=intrusionOrder[intrusionsSpawned++];place(cell.i,1,cell.k,type);const record=world.get(key(cell.i,1,cell.k));record.intruder=true;record.collider.scale.set(1.65,1.55,1.65);record.collider.userData.touchPriority=true;record.touchTargets=[];record.mesh.traverse(child=>{if(child.isMesh){child.userData.record=record;child.userData.touchPriority=true;addTarget(child);record.touchTargets.push(child)}});nextIntrusionAt=Infinity;showObjectIndicator({mesh:record.mesh},'suggestion',9000);toast(`⚠️ Apareció ${pieces[type].mapu}: tócalo y luego toca el borde natural`);beep(310,.2);evaluate(true);return true;
 }
 function updateLofIntrusion(){if(activeFloor==='lofSocial'&&!freeMode&&Date.now()>=nextIntrusionAt)spawnLofIntruder()}
 window.spawnLofIntruder=spawnLofIntruder;
@@ -1454,11 +1462,24 @@ function confetti(n){
 }
 evaluate(true);
 
-const raycaster=new THREE.Raycaster(),ndc=new THREE.Vector2();
+const raycaster=new THREE.Raycaster(),ndc=new THREE.Vector2(),intruderTouchPoint=new THREE.Vector3();
 function ndcFrom(x,y){const r=renderer.domElement.getBoundingClientRect();ndc.x=((x-r.left)/r.width)*2-1;ndc.y=-((y-r.top)/r.height)*2+1}
+function intruderAtScreen(x,y){
+  const rect=renderer.domElement.getBoundingClientRect();let nearest=null,bestDistance=Math.max(58,Math.min(rect.width,rect.height)*.1);
+  world.forEach(record=>{
+    if(!record.intruder)return;record.collider.getWorldPosition(intruderTouchPoint);intruderTouchPoint.project(camera);
+    const screenX=rect.left+(intruderTouchPoint.x+1)*rect.width/2,screenY=rect.top+(1-intruderTouchPoint.y)*rect.height/2,distance=Math.hypot(screenX-x,screenY-y);
+    if(distance<bestDistance){bestDistance=distance;nearest=record}
+  });return nearest;
+}
 function act(x,y){
-  ndcFrom(x,y);raycaster.setFromCamera(ndc,camera);const hits=raycaster.intersectObjects(targets,false);if(!hits.length)return;
-  const movableHit=hits.find(candidate=>candidate.object.userData.record&&movableTypes.has(candidate.object.userData.record.type)),hit=!deleting&&movableHit?movableHit:hits[0];
+  const waitingIntruder=!deleting?[...world.values()].find(record=>record.intruder):null,directIntruder=waitingIntruder?intruderAtScreen(x,y):null;
+  if(directIntruder&&selectedMover!==directIntruder){selectMover(directIntruder);return}
+  if(waitingIntruder&&selectedMover!==waitingIntruder){selectMover(waitingIntruder);toast(`🐾 ${pieces[waitingIntruder.type].mapu} seleccionado · toca el borde natural`);return}
+  if(selectedMover&&selectedMover.intruder){const destination=nearestNaturalCell(selectedMover);if(destination)startMovement(selectedMover,destination.i,destination.k);else toast('No hay una ruta libre hacia el borde natural');return}
+  ndcFrom(x,y);raycaster.setFromCamera(ndc,camera);
+  const hits=raycaster.intersectObjects(targets,false);if(!hits.length)return;
+  const intruderHit=hits.find(candidate=>candidate.object.userData.touchPriority&&candidate.object.userData.record&&candidate.object.userData.record.intruder),movableHit=intruderHit||hits.find(candidate=>candidate.object.userData.record&&movableTypes.has(candidate.object.userData.record.type)),hit=!deleting&&movableHit?movableHit:hits[0];
   const c=hit.object.userData;let feedback=null;
   if(deleting){
     if(c.j===0){toast('La base del paisaje no se borra');return}
