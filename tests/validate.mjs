@@ -67,8 +67,10 @@ assert.match(html, /SpeechSynthesisUtterance/);
 assert.match(html, /function startMusic\(\)/);
 assert.match(html, /function kultrunBeat\(/);
 assert.match(html, /function pifilcaNote\(/);
-assert.match(html, /const now=audioCtx\.currentTime\+\.04,phrases=\[\[392,440,523\.25,587\.33\],\[523\.25,440,392,349\.23\]\]/);
-assert.match(html, /setInterval\(musicPulse,2480\)/);
+assert.match(html, /const musicPhrases=\[/);
+assert.ok((html.match(/\[[\d.,]+\]/g) || []).length >= 8, "La música debe contener varias frases");
+assert.match(html, /const musicDrums=\[/);
+assert.match(html, /setInterval\(musicPulse,3440\)/);
 assert.match(html, /inspiradas en timbres de kultrun y pifilca/);
 assert.match(html, /no reproduce cantos ni melodías ceremoniales/);
 assert.match(html, /function getNaturalSpanishVoice\(\)/);
@@ -112,14 +114,23 @@ const animationSource=html.slice(html.indexOf("function animateEntry"),html.inde
 assert.doesNotMatch(animationSource,/new THREE\./,"El ciclo de animación no debe crear geometrías ni materiales");
 assert.match(html, /Prototipo móvil/);
 assert.match(html, /let category='ambiental', selected='hill', deleting=false, soundOn=true, freeMode=false/);
-for (const id of ["seaWater", "sand", "araucaria", "reliefRock", "coipo", "swan", "lapwing", "ibis", "seaLion", "jumpingFish"]) {
+for (const id of ["seaWater", "sand", "araucaria", "reliefRock", "coipo", "swan", "lapwing", "ibis", "seaLion", "jumpingFish", "seagull", "whale"]) {
   assert.match(html, new RegExp(`${id}:\\{cat:`), `${id} debe existir`);
 }
 assert.match(html, /andino:\{label:'Paisaje andino'/);
 assert.match(html, /valle:\{label:'Paisaje de valle'/);
 assert.match(html, /required:\['water','grass','forest','wetland','fox','pudu','coipo','swan','hawk','lapwing','ibis'\]/);
 assert.match(html, /costero:\{label:'Paisaje costero'/);
-assert.match(html, /Conociendo el paisaje <strong>\$\{completed\}\/3/);
+assert.match(html, /required:\['seaWater','water','wetland','grass','sand','reliefRock','seaLion','jumpingFish','seagull','whale'\]/);
+assert.match(html, /function seagull\(\)/);
+assert.match(html, /mapu:'Kaukau',es:'Gaviota grande'/);
+assert.match(html, /mapu:'Yene',es:'Ballena'/);
+assert.match(html, /0xd8dedb/);
+assert.match(html, /entry\.type==='seaLion'[\s\S]{0,220}if\(entry\.tail\)entry\.tail\.rotation\.y/);
+assert.match(html, /function selectIntegrated\(\)/);
+assert.match(html, /id="integratedProgress"/);
+assert.match(html, /activeFloor='integrado';integratedMode=true/);
+assert.match(html, /Cordillera \$\{andino\}/);
 assert.match(html, /function queltehueCall\(\)/);
 assert.match(html, /mapu\.onend=queltehueCall/);
 assert.match(html, /entry\.type==='ibis'&&entry\.peckHead/);

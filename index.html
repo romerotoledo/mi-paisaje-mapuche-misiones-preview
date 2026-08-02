@@ -49,6 +49,12 @@ header{position:absolute;z-index:10;left:0;right:0;top:8px;padding:calc(8px + va
 .floorProgress{margin-left:33px;font-size:10px;font-weight:900;color:var(--green2)}
 .floorSelect{margin:7px 0 0 33px;min-height:38px;border:0;border-radius:11px;padding:7px 11px;background:var(--earth);color:#fff;font-weight:900;touch-action:manipulation}
 .floorCard.active .floorSelect{background:var(--ochre)}
+.missionDivider{height:1px;margin:14px 2px;background:rgba(97,69,47,.28)}
+.grandMissionCard{border:2px solid rgba(47,105,64,.3);border-radius:16px;padding:11px;background:#f2f8ed}
+.grandMissionCard.done{border-color:var(--green);background:#e6f3df}
+.grandMissionCard h3{margin:0;font-size:15px}.grandMissionCard p{margin:6px 0;font-size:11px;line-height:1.4}
+.integratedProgress{font-size:10px;line-height:1.45;font-weight:900;color:var(--green2);white-space:pre-line}
+#integratedMode{min-height:42px;margin-top:8px;border:0;border-radius:12px;padding:8px 12px;background:#2f6940;color:#fff;font-weight:900;touch-action:manipulation}
 #helpChip{position:absolute;z-index:12;left:50%;top:calc(69px + var(--safe-top));transform:translateX(-50%);max-width:58vw;border:2px solid var(--earth);border-radius:999px;background:var(--panel);box-shadow:var(--shadow);padding:7px 12px;font-size:11px;font-weight:900;text-align:center;transition:opacity .4s}
 #moveStatus{display:none;position:absolute;z-index:18;left:50%;top:calc(112px + var(--safe-top));transform:translateX(-50%);max-width:78vw;border:2px solid #2f6940;border-radius:999px;background:rgba(244,255,236,.97);box-shadow:var(--shadow);padding:8px 14px;color:#244a2e;font-size:12px;font-weight:900;text-align:center;pointer-events:none}
 #moveStatus.show{display:block}
@@ -144,7 +150,7 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
   <img class="institutionalLogo institutionalLogoUa" src="./assets/institucional/universidad-autonoma.png" alt="Universidad Autónoma de Chile">
 </aside>
 
-<button id="missionBtn">🎯 Conociendo el paisaje <strong>0/3</strong></button>
+<button id="missionBtn">🎯 Grandes misiones <strong>0/2</strong></button>
 <section id="missionPanel">
   <h2>Gran misión 1 · Conociendo el paisaje</h2>
   <p class="floorIntro">Construye tres pisos ecológicos. En cada uno encontrarás solamente los elementos propios de ese ambiente.</p>
@@ -162,9 +168,16 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
   </div>
   <div class="floorCard" id="floor-costero">
     <div class="floorHead"><span class="badge">3</span> Paisaje costero</div>
-    <p>Mar azul, arena, piedras con relieve, lobos marinos y peces saltando.</p>
-    <div class="floorProgress" id="progress-costero">0 de 5 elementos esenciales</div>
+    <p>Mar azul, agua dulce, humedal, pasto, arena, roqueríos, lobo marino, pez plateado, gaviota y ballena.</p>
+    <div class="floorProgress" id="progress-costero">0 de 10 elementos esenciales</div>
     <button class="floorSelect" data-floor="costero">Construir este paisaje</button>
+  </div>
+  <div class="missionDivider"></div>
+  <div class="grandMissionCard" id="grandMission2">
+    <h3>Gran misión 2 · Conectar la naturaleza</h3>
+    <p>Construye cordillera, valle y costa en un mismo tablero. Sigue el agua dulce desde las alturas hasta su encuentro con el mar.</p>
+    <div class="integratedProgress" id="integratedProgress">Cordillera 0/5 · Valle 0/11 · Costa 0/10 · Conexión pendiente</div>
+    <button id="integratedMode">Construir los tres paisajes juntos</button>
   </div>
   <button id="freeMode">Ver todos los elementos del prototipo</button>
   <p class="sourceNote">🔊 Al tocar un elemento se lee solamente su nombre en mapudungun, usando la voz más natural disponible. El nombre en español permanece visible como apoyo. La pronunciación mapudungun sigue siendo una guía sintética que requiere validación de hablantes. Se mantiene la música original con percusión y flauta inspiradas en timbres de kultrun y pifilca; no reproduce cantos ni melodías ceremoniales.</p>
@@ -216,7 +229,7 @@ const pieces={
   sand:{cat:'ambiental',kind:'block',ico:'🏖️',mapu:'Kuyüm',es:'Arena',desc:'La arena forma playas donde se encuentran el mar y la tierra.',col:0xd9b873},
   wetland:{cat:'ambiental',kind:'obj',ico:'🪷',mapu:'Menoko',es:'Humedal',desc:'Es un ambiente donde el agua, las plantas y los animales forman un espacio especial.'},
   forest:{cat:'ambiental',kind:'obj',ico:'🌳',mapu:'Mawiza',es:'Bosque nativo',desc:'El bosque nativo del valle reúne distintas especies de árboles y entrega refugio a muchos animales.'},
-  araucaria:{cat:'ambiental',kind:'obj',ico:'🌲',mapu:'Pewenentu',es:'Bosque de araucarias',desc:'El pewenentu es un bosque de pewen o araucarias propio del paisaje cordillerano.'},
+  araucaria:{cat:'ambiental',kind:'obj',ico:'🌳',mapu:'Pewenentu',es:'Bosque de araucarias',desc:'El pewenentu es un bosque de pewen o araucarias propio del paisaje cordillerano.'},
   reliefRock:{cat:'ambiental',kind:'obj',ico:'🪨',mapu:'Kura',es:'Piedra con relieve',desc:'Las rocas y sus formas construyen bordes, puntas y refugios del paisaje costero.'},
   hill:{cat:'ambiental',kind:'obj',ico:'⛰️',mapu:'Wingkul',es:'Cerro',desc:'Los cerros ayudan a orientarse y forman parte importante del paisaje.'},
   volcano:{cat:'ambiental',kind:'obj',ico:'🌋',mapu:'Zegüñ',es:'Volcán',desc:'Los volcanes marcan el paisaje del sur de Chile y recuerdan que la tierra cambia.'},
@@ -230,7 +243,9 @@ const pieces={
   lapwing:{cat:'silvestre',kind:'obj',ico:'🐦',mapu:'Tregül',es:'Queltehue',desc:'El queltehue vive en praderas y lugares húmedos. Su grito de alerta es fácil de reconocer.'},
   ibis:{cat:'silvestre',kind:'obj',ico:'🐦',mapu:'Raki',es:'Bandurria',desc:'La bandurria recorre pastizales y humedales buscando alimento con su pico largo.'},
   seaLion:{cat:'silvestre',kind:'obj',ico:'🦭',mapu:'Lame',es:'Lobo marino',desc:'El lobo marino descansa en roqueríos y se alimenta en el mar.'},
-  jumpingFish:{cat:'silvestre',kind:'obj',ico:'🐟',mapu:'Challwa',es:'Pez saltando',desc:'Los peces viven bajo el agua y algunos saltan sobre la superficie del mar.'},
+  jumpingFish:{cat:'silvestre',kind:'obj',ico:'🐟',mapu:'Challwa',es:'Pez plateado saltando',desc:'Los peces viven bajo el agua y algunos saltan sobre la superficie del mar.'},
+  seagull:{cat:'silvestre',kind:'obj',ico:'🕊️',mapu:'Kaukau',es:'Gaviota grande',desc:'La gaviota recorre la costa, descansa en roqueríos y puede volar sobre el mar.'},
+  whale:{cat:'silvestre',kind:'obj',ico:'🐋',mapu:'Yene',es:'Ballena',desc:'La ballena se desplaza por el mar y conecta distintos lugares del océano.'},
   hawk:{cat:'silvestre',kind:'obj',ico:'🦅',mapu:'Ñamku',es:'Halcón',desc:'El halcón observa el paisaje desde el aire y caza pequeños animales.'},
 
   corn:{cat:'productivo',kind:'obj',ico:'🌽',mapu:'Wa',es:'Maíz',desc:'El maíz puede cultivarse en una chacra y forma parte de diferentes preparaciones.'},
@@ -259,17 +274,21 @@ const pieces={
   boy:{cat:'social',kind:'obj',ico:'👦',mapu:'Pichi wentru',es:'Niño',desc:'Los niños aprenden observando, jugando y participando en la vida comunitaria.'},
   elder:{cat:'social',kind:'obj',ico:'🧓',mapu:'Fücha che',es:'Persona mayor',desc:'Las personas mayores conservan recuerdos, experiencias y conocimientos importantes.'}
 };
-const movableTypes=new Set(['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','hawk','chicken','camelid','woman','man','girl','boy','elder','machi','lonko']);
-const flyingMovers=new Set(['condor','swan','jumpingFish','hawk']),animalMovers=new Set(['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','hawk','chicken','camelid']);
-const aquaticMovers=new Set(['coipo','swan','seaLion','jumpingFish']),strictAquaticMovers=new Set(['jumpingFish']);
+const movableTypes=new Set(['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','seagull','whale','hawk','chicken','camelid','woman','man','girl','boy','elder','machi','lonko']);
+const flyingMovers=new Set(['condor','swan','jumpingFish','seagull','hawk']),animalMovers=new Set(['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','seagull','whale','hawk','chicken','camelid']);
+const aquaticMovers=new Set(['coipo','swan','seaLion','jumpingFish','whale']),strictAquaticMovers=new Set(['jumpingFish','whale']);
 const humanMovers=new Set(['woman','man','girl','boy','elder','machi','lonko']);
 
+const andinoAllowed=['grass','earth','hill','volcano','araucaria','condor','puma'];
+const valleAllowed=['grass','earth','water','wetland','forest','fox','pudu','coipo','swan','hawk','lapwing','ibis'];
+const costeroAllowed=['grass','water','wetland','seaWater','sand','reliefRock','seaLion','jumpingFish','seagull','whale'];
 const floorDefinitions={
-  andino:{label:'Paisaje andino',base:'grass',required:['hill','volcano','araucaria','condor','puma'],allowed:['grass','earth','hill','volcano','araucaria','condor','puma']},
-  valle:{label:'Paisaje de valle',base:'grass',required:['water','grass','forest','wetland','fox','pudu','coipo','swan','hawk','lapwing','ibis'],allowed:['grass','earth','water','wetland','forest','fox','pudu','coipo','swan','hawk','lapwing','ibis']},
-  costero:{label:'Paisaje costero',base:'sand',required:['seaWater','sand','reliefRock','seaLion','jumpingFish'],allowed:['seaWater','sand','reliefRock','seaLion','jumpingFish']}
+  andino:{label:'Paisaje andino',base:'grass',required:['hill','volcano','araucaria','condor','puma'],allowed:andinoAllowed},
+  valle:{label:'Paisaje de valle',base:'grass',required:['water','grass','forest','wetland','fox','pudu','coipo','swan','hawk','lapwing','ibis'],allowed:valleAllowed},
+  costero:{label:'Paisaje costero',base:'sand',required:['seaWater','water','wetland','grass','sand','reliefRock','seaLion','jumpingFish','seagull','whale'],allowed:costeroAllowed},
+  integrado:{label:'Los tres paisajes conectados',base:'grass',required:[],allowed:[...new Set([...andinoAllowed,...valleAllowed,...costeroAllowed])]}
 };
-let activeFloor='andino',floorProgress={andino:false,valle:false,costero:false};
+let activeFloor='andino',integratedMode=false,floorProgress={andino:false,valle:false,costero:false};
 let category='ambiental', selected='hill', deleting=false, soundOn=true, freeMode=false;
 const app=$('#app'), scene=new THREE.Scene();
 const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
@@ -478,15 +497,30 @@ function waterAnimal(type){
     g.add(ellipsoid(0xf5f3e9,-.22,.45,.2,.3,.055,.19));
   }else if(type==='seaLion'){
     g.add(ellipsoid(0x65584b,-.05,.34,0,.46,.25,.26));g.add(ellipsoid(0x796b5c,.37,.52,0,.22,.2,.19));
-    g.add(part(new THREE.ConeGeometry(.16,.38,7),0x584c42,-.45,.3,0,0,0,Math.PI/2));
+    const tail=new THREE.Group();tail.position.set(-.43,.3,0);
+    tail.add(part(new THREE.ConeGeometry(.15,.38,7),0x584c42,-.16,0,.1,0,0,Math.PI/2));
+    tail.add(part(new THREE.ConeGeometry(.12,.32,7),0x6c5d50,-.18,0,-.12,0,0,Math.PI/2));g.add(tail);g.userData.tail=tail;
     g.add(part(new THREE.ConeGeometry(.1,.34,7),0x584c42,-.05,.18,.27,.15,0,-.25));g.add(part(new THREE.ConeGeometry(.1,.34,7),0x584c42,-.05,.18,-.27,-.15,0,-.25));
     g.add(ellipsoid(0x171513,.48,.59,.09,.018,.022,.014));
+  }else if(type==='whale'){
+    const swimmer=new THREE.Group();swimmer.add(ellipsoid(0x667c86,0,.38,0,.54,.22,.22));swimmer.add(ellipsoid(0xaebdc0,.13,.29,.16,.32,.08,.05));
+    swimmer.add(part(new THREE.ConeGeometry(.11,.32,7),0x536a75,.03,.56,0,0,0,.08));
+    const tail=new THREE.Group();tail.position.set(-.52,.38,0);tail.add(part(new THREE.ConeGeometry(.14,.32,7),0x536a75,-.13,0,.13,0,0,Math.PI/2));tail.add(part(new THREE.ConeGeometry(.14,.32,7),0x536a75,-.13,0,-.13,0,0,Math.PI/2));swimmer.add(tail);
+    swimmer.add(ellipsoid(0x182126,.43,.45,.1,.018,.02,.014));g.add(swimmer);g.userData.swimmer=swimmer;g.userData.tail=tail;
   }else{
-    const fish=new THREE.Group();fish.add(ellipsoid(0x5aa7b8,0,.42,0,.34,.16,.13));
-    fish.add(part(new THREE.ConeGeometry(.18,.3,6),0x327f96,-.38,.42,0,0,0,-Math.PI/2));fish.add(part(new THREE.ConeGeometry(.11,.24,6),0x75bfd0,0,.58,0,0,0,.12));
+    const fish=new THREE.Group();fish.add(ellipsoid(0xd8dedb,0,.42,0,.34,.16,.13));
+    fish.add(part(new THREE.ConeGeometry(.18,.3,6),0x89979a,-.38,.42,0,0,0,-Math.PI/2));fish.add(part(new THREE.ConeGeometry(.11,.24,6),0xb8c3c1,0,.58,0,0,0,.12));
     fish.add(ellipsoid(0x181615,.22,.47,.11,.018,.019,.013));fish.rotation.z=-.22;g.add(fish);g.userData.jumper=fish;
   }
   return g;
+}
+function seagull(){
+  const g=new THREE.Group(),flyer=new THREE.Group();g.add(ellipsoid(0x77736c,0,.08,0,.24,.1,.19));
+  flyer.add(ellipsoid(0xf2f3ef,0,.5,0,.23,.2,.16));
+  flyer.add(ellipsoid(0xd2d5d2,-.31,.53,0,.38,.05,.17));flyer.add(ellipsoid(0xd2d5d2,.31,.53,0,.38,.05,.17));
+  flyer.add(ellipsoid(0xffffff,.18,.68,0,.12,.11,.1));flyer.add(part(new THREE.ConeGeometry(.04,.17,6),0xd69b34,.33,.67,0,0,0,-Math.PI/2));
+  flyer.add(ellipsoid(0x191817,.24,.72,.08,.014,.016,.011));flyer.add(ellipsoid(0x4c5556,-.48,.53,0,.11,.035,.15));flyer.add(ellipsoid(0x4c5556,.48,.53,0,.11,.035,.15));
+  g.add(flyer);g.userData.flyer=flyer;return g;
 }
 function valleyBird(type){
   const lapwing=type==='lapwing',g=new THREE.Group(),body=lapwing?0x6d745c:0x9a7046,breast=lapwing?0xf2eee1:0xd9c7ad,leg=lapwing?0xb34f3f:0x805b46;
@@ -552,12 +586,16 @@ function build(type){
     });g.userData.swayParts=swayParts;
   } else if(type==='araucaria'){
     const swayParts=[];
-    [[-.3,.08],[.25,-.08],[0,.25]].forEach((p,i)=>{
-      g.add(part(new THREE.CylinderGeometry(.055,.1,.82,7),0x6e4930,p[0],.41,p[1]));
-      for(let level=0;level<3;level++){
-        const crown=part(new THREE.CylinderGeometry(.08,.34-level*.055,.12,8),i%2?0x376e43:0x2f613c,p[0],.76+level*.2,p[1]);
-        g.add(crown);swayParts.push(crown);
-      }
+    [[-.16,.05,1],[.31,-.18,.68]].forEach(p=>{
+      const [tx,tz,scale]=p,trunkTop=1.28*scale;g.add(part(new THREE.CylinderGeometry(.045*scale,.105*scale,trunkTop,8),0x765039,tx,trunkTop/2,tz));
+      [[.78,.38],[1.02,.52],[1.2,.46]].forEach(([height,radius],level)=>{
+        for(let arm=0;arm<7;arm++){
+          const angle=arm*Math.PI*2/7+(level%2)*Math.PI/7,length=radius*scale,cx=tx+Math.cos(angle)*length*.48,cz=tz+Math.sin(angle)*length*.48;
+          const branch=part(new THREE.BoxGeometry(length,.035*scale,.045*scale),0x58412d,cx,height*scale,cz,0,-angle,0);g.add(branch);
+          const needles=ellipsoid(level===2?0x386b42:0x2f613c,tx+Math.cos(angle)*length,height*scale+.035,tz+Math.sin(angle)*length,.2*scale,.065*scale,.17*scale);g.add(needles);swayParts.push(needles);
+        }
+      });
+      const crown=ellipsoid(0x2b5b39,tx,trunkTop+.04,tz,.43*scale,.12*scale,.43*scale);g.add(crown);swayParts.push(crown);
     });g.userData.swayParts=swayParts;
   } else if(type==='reliefRock'){
     g.add(part(new THREE.DodecahedronGeometry(.54,0),0x777d78,-.1,.35,0,.08,.18,0));
@@ -581,8 +619,10 @@ function build(type){
     const animal=quadruped(type);g.add(animal);if(type==='pudu')g.userData.head=animal.userData.head;
   } else if(['condor','hawk'].includes(type)){
     const birdModel=bird(type);g.add(birdModel);g.userData.flyer=birdModel.userData.flyer;
-  } else if(['coipo','swan','seaLion','jumpingFish'].includes(type)){
-    const animal=waterAnimal(type);g.add(animal);if(type==='jumpingFish')g.userData.jumper=animal.userData.jumper;
+  } else if(type==='seagull'){
+    const birdModel=seagull();g.add(birdModel);g.userData.flyer=birdModel.userData.flyer;
+  } else if(['coipo','swan','seaLion','jumpingFish','whale'].includes(type)){
+    const animal=waterAnimal(type);g.add(animal);if(type==='jumpingFish')g.userData.jumper=animal.userData.jumper;if(animal.userData.tail)g.userData.tail=animal.userData.tail;if(animal.userData.swimmer)g.userData.swimmer=animal.userData.swimmer;
   } else if(type==='lapwing'||type==='ibis'){
     const animal=valleyBird(type);g.add(animal);g.userData.peckHead=animal.userData.peckHead;
   } else if(type==='corn'||type==='potato'){
@@ -653,11 +693,11 @@ function build(type){
 function addTarget(m){targets.push(m)}
 function removeTarget(m){const i=targets.indexOf(m);if(i>=0)targets.splice(i,1)}
 function registerAnimation(type,mesh,i,j,k){
-  if(!['water','seaWater','forest','araucaria','foye','hearth','condor','hawk','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','chicken'].includes(type))return;
+  if(!['water','seaWater','forest','araucaria','foye','hearth','condor','hawk','seagull','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','whale','chicken'].includes(type))return;
   animated.push({
     type,mesh,i,j,k,phase:Math.random()*Math.PI*2,baseX:mesh.position.x,baseY:mesh.position.y,baseZ:mesh.position.z,
-    state:'rest',elapsed:0,nextAction:type==='condor'||type==='hawk'?10+Math.random()*14:type==='pudu'?8+Math.random()*12:type==='ibis'?2+Math.random()*3:type==='chicken'?4+Math.random()*7:0,
-    swayParts:mesh.userData.swayParts||[],smoke:mesh.userData.smoke||[],head:mesh.userData.head||null,flyer:mesh.userData.flyer||null,jumper:mesh.userData.jumper||null,peckHead:mesh.userData.peckHead||null,peckBaseY:mesh.userData.peckHead?mesh.userData.peckHead.position.y:0
+    state:'rest',elapsed:0,nextAction:type==='condor'||type==='hawk'||type==='seagull'?8+Math.random()*12:type==='pudu'?8+Math.random()*12:type==='ibis'?2+Math.random()*3:type==='chicken'?4+Math.random()*7:0,
+    swayParts:mesh.userData.swayParts||[],smoke:mesh.userData.smoke||[],head:mesh.userData.head||null,flyer:mesh.userData.flyer||null,jumper:mesh.userData.jumper||null,tail:mesh.userData.tail||null,swimmer:mesh.userData.swimmer||null,peckHead:mesh.userData.peckHead||null,peckBaseY:mesh.userData.peckHead?mesh.userData.peckHead.position.y:0
   });
 }
 function resetAnimatedEntry(entry){
@@ -665,6 +705,8 @@ function resetAnimatedEntry(entry){
   entry.swayParts.forEach(part=>part.rotation.set(0,0,0));
   if(entry.head)entry.head.rotation.y=0;
   if(entry.flyer){entry.flyer.position.set(0,0,0);entry.flyer.rotation.set(0,0,0)}
+  if(entry.tail)entry.tail.rotation.set(0,0,0);
+  if(entry.swimmer)entry.swimmer.position.set(0,0,0);
   if(entry.peckHead){entry.peckHead.rotation.set(0,0,0);entry.peckHead.position.y=entry.peckBaseY}
   entry.smoke.forEach(particle=>particle.visible=false);
 }
@@ -684,19 +726,19 @@ function animateEntry(entry,time,delta){
       particle.scale.setScalar(.5+data.age*.9);
     });return;
   }
-  if((entry.type==='condor'||entry.type==='hawk')&&entry.flyer){
+  if((entry.type==='condor'||entry.type==='hawk'||entry.type==='seagull')&&entry.flyer){
     entry.elapsed+=delta;
     if(entry.state==='rest'){
       entry.flyer.position.set(0,0,0);
       if(entry.elapsed>=entry.nextAction){entry.state='flight';entry.elapsed=0}
     }else if(entry.state==='flight'){
-      const duration=entry.type==='hawk'?6.5:10,range=entry.type==='hawk'?1.15:.9,progress=Math.min(1,entry.elapsed/duration),angle=progress*Math.PI*2;
+      const duration=entry.type==='condor'?10:entry.type==='hawk'?6.5:5.4,range=entry.type==='condor'?.9:entry.type==='hawk'?1.15:1.32,progress=Math.min(1,entry.elapsed/duration),angle=progress*Math.PI*2;
       entry.flyer.position.set(Math.cos(angle)*range,.62+Math.sin(progress*Math.PI)*.35,Math.sin(angle)*range);entry.flyer.rotation.y=-angle;
       if(progress>=1){entry.state='return';entry.elapsed=0}
     }else{
       const progress=Math.min(1,entry.elapsed/2.4),ease=1-(1-progress)*(1-progress);
       entry.flyer.position.multiplyScalar(1-ease);entry.flyer.rotation.y*=1-ease;
-      if(progress>=1){entry.state='rest';entry.elapsed=0;entry.nextAction=(entry.type==='hawk'?9:18)+Math.random()*(entry.type==='hawk'?14:22);entry.flyer.position.set(0,0,0)}
+      if(progress>=1){entry.state='rest';entry.elapsed=0;entry.nextAction=(entry.type==='condor'?18:8)+Math.random()*(entry.type==='condor'?22:13);entry.flyer.position.set(0,0,0)}
     }return;
   }
   if(entry.type==='pudu'&&entry.head){
@@ -710,7 +752,13 @@ function animateEntry(entry,time,delta){
   if(entry.type==='jumpingFish'&&entry.jumper){
     const jump=Math.max(0,Math.sin(time*1.65+entry.phase));entry.jumper.position.y=jump*jump*.42;entry.jumper.rotation.z=-.22+Math.sin(time*1.65+entry.phase)*.45;return;
   }
-  if(['coipo','swan','seaLion'].includes(entry.type)){
+  if(entry.type==='seaLion'){
+    entry.mesh.position.y=entry.baseY+Math.sin(time*.75+entry.phase)*.025;entry.mesh.rotation.y=Math.sin(time*.35+entry.phase)*.05;if(entry.tail)entry.tail.rotation.y=Math.sin(time*1.9+entry.phase)*.34;return;
+  }
+  if(entry.type==='whale'){
+    entry.mesh.position.y=entry.baseY+Math.sin(time*.5+entry.phase)*.035;if(entry.tail)entry.tail.rotation.y=Math.sin(time*1.25+entry.phase)*.28;if(entry.swimmer)entry.swimmer.rotation.z=Math.sin(time*.45+entry.phase)*.025;return;
+  }
+  if(['coipo','swan'].includes(entry.type)){
     entry.mesh.position.y=entry.baseY+Math.sin(time*.75+entry.phase)*.025;entry.mesh.rotation.y=Math.sin(time*.35+entry.phase)*.05;return;
   }
   if(entry.type==='ibis'&&entry.peckHead){
@@ -740,6 +788,7 @@ function getMoversAtCell(i,k,except=null){
 function getHostedMovers(i,k){return getMoversAtCell(i,k).filter(record=>record.host)}
 function hostAccepts(record,host){
   if(!host)return false;
+  if(aquaticMovers.has(record.type))return false;
   if(animalMovers.has(record.type))return host.type==='fence'||host.type==='fort';
   if(humanMovers.has(record.type))return host.type==='ruka'||host.type==='fort';
   return false;
@@ -870,6 +919,15 @@ function paintGround(i,k,type){
   place(i,0,k,previous);return null;
 }
 function initialWorld(floor=activeFloor){
+  if(floor==='integrado'){
+    for(let i=0;i<N;i++)for(let k=0;k<N;k++)place(i,0,k,k<8?'grass':'sand');
+    for(let k=8;k<N;k++)for(let i=8;i<N;i++){remove(i,0,k);place(i,0,k,'seaWater')}
+    for(let k=0;k<=8;k++){
+      const riverI=Math.min(7,4+Math.floor(k/3));remove(riverI,0,k);place(riverI,0,k,'water');
+      if(k>=4){remove(riverI+1,0,k);place(riverI+1,0,k,'water')}
+    }
+    return;
+  }
   const base=floorDefinitions[floor]?floorDefinitions[floor].base:'grass';
   for(let i=0;i<N;i++)for(let k=0;k<N;k++)place(i,0,k,base);
 }
@@ -922,12 +980,18 @@ function clearLandscape(){
   cancelActiveMovement();clearMoverSelection();[...world.keys()].forEach(cell=>{const [i,j,k]=cell.split(',').map(Number);remove(i,j,k)});undoStack.length=0;shownInfo.clear();resetLandscapeFeedback();clearAllIndicators();
 }
 function selectFloor(floor){
-  if(!floorDefinitions[floor]||floor===activeFloor&&!freeMode)return;
-  activeFloor=floor;freeMode=false;clearLandscape();initialWorld(activeFloor);category='ambiental';selected=floorDefinitions[activeFloor].allowed.find(id=>pieces[id].cat==='ambiental');deleting=false;
+  if(!floorDefinitions[floor]||floor==='integrado'||floor===activeFloor&&!freeMode&&!integratedMode)return;
+  activeFloor=floor;integratedMode=false;freeMode=false;clearLandscape();initialWorld(activeFloor);category='ambiental';selected=floorDefinitions[activeFloor].allowed.find(id=>pieces[id].cat==='ambiental');deleting=false;
+  $('#helpChip').textContent='Toca un personaje o animal y luego toca su destino';$('#helpChip').style.opacity='1';
   updateFloorCards();renderTabs();renderItems();evaluate(true);$('#missionPanel').style.display='none';missionPanel=false;toast(`Ahora construyes: ${floorDefinitions[floor].label}`);
 }
 document.querySelectorAll('.floorSelect').forEach(button=>button.onclick=()=>selectFloor(button.dataset.floor));
-$('#freeMode').onclick=()=>{freeMode=true;category='ambiental';selected='grass';$('#missionPanel').style.display='none';missionPanel=false;toast('Todos los elementos están disponibles');renderTabs();renderItems()};
+function selectIntegrated(){
+  activeFloor='integrado';integratedMode=true;freeMode=false;clearLandscape();initialWorld('integrado');category='ambiental';selected='hill';deleting=false;
+  $('#helpChip').textContent='🏔️ Cordillera al fondo · 🌿 Valle al centro · 🌊 Costa al frente';$('#helpChip').style.opacity='1';updateFloorCards();renderTabs();renderItems();evaluate(true);$('#missionPanel').style.display='none';missionPanel=false;toast('Gran misión 2: conecta cordillera, valle y costa');
+}
+$('#integratedMode').onclick=selectIntegrated;
+$('#freeMode').onclick=()=>{integratedMode=false;freeMode=true;category='ambiental';selected='grass';$('#helpChip').textContent='Toca un personaje o animal y luego toca su destino';$('#missionPanel').style.display='none';missionPanel=false;toast('Todos los elementos están disponibles');renderTabs();renderItems()};
 function openInfo(id){
   const d=pieces[id];$('#infoIcon').textContent=d.ico;$('#infoMapu').textContent=d.mapu;$('#infoEs').textContent=d.es;$('#infoText').textContent=d.desc;$('#infoCard').style.display='block';
   pronounce(id);
@@ -1017,12 +1081,17 @@ function pifilcaNote(freq,when,duration=.52,accent=1){
   gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(.018*accent,when+.055);gain.gain.setValueAtTime(.014*accent,when+Math.max(.08,duration-.12));gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
   filter.type='lowpass';filter.frequency.value=2600;filter.Q.value=.55;voice.connect(gain);air.connect(gain);gain.connect(filter);filter.connect(getMusicOutput(ctx));voice.start(when);air.start(when);voice.stop(when+duration+.03);air.stop(when+duration+.03);
 }
+const musicPhrases=[
+  [392,440,523.25,587.33,523.25,440],[349.23,392,440,523.25,440,392],[392,0,523.25,587.33,659.25,523.25],[440,523.25,587.33,523.25,440,349.23],
+  [329.63,392,440,0,523.25,587.33],[523.25,440,392,349.23,392,440],[587.33,659.25,587.33,523.25,440,392],[392,523.25,440,349.23,329.63,392]
+];
+const musicDrums=[[0,.56,1.12,1.68,2.24,2.8],[0,.84,1.4,2.24,2.8],[0,.56,1.4,1.96,2.8],[0,.84,1.68,2.52]];
 function musicPulse(){
-  if(!soundOn||!audioCtx)return;const now=audioCtx.currentTime+.04,phrases=[[392,440,523.25,587.33],[523.25,440,392,349.23]],phrase=phrases[musicStep%phrases.length];
-  [0,.48,.96,1.44,1.92].forEach((offset,index)=>kultrunBeat(now+offset,index===0||index===4?1:.72));
-  phrase.forEach((freq,index)=>pifilcaNote(freq,now+.16+index*.48,index===3?.68:.5,index===0?1:.86));musicStep++;
+  if(!soundOn||!audioCtx)return;const now=audioCtx.currentTime+.04,phrase=musicPhrases[musicStep%musicPhrases.length],drums=musicDrums[musicStep%musicDrums.length];
+  drums.forEach((offset,index)=>kultrunBeat(now+offset,index===0||index===drums.length-1?1:.68));
+  phrase.forEach((freq,index)=>{if(freq)pifilcaNote(freq,now+.14+index*.5,index===phrase.length-1?.72:.52,index===0?1:.84)});musicStep++;
 }
-function startMusic(){if(!soundOn||musicTimer)return;const ctx=getAudioContext();if(!ctx)return;const output=getMusicOutput(ctx);output.gain.cancelScheduledValues(ctx.currentTime);output.gain.setTargetAtTime(.72,ctx.currentTime,.035);musicPulse();musicTimer=setInterval(musicPulse,2480)}
+function startMusic(){if(!soundOn||musicTimer)return;const ctx=getAudioContext();if(!ctx)return;const output=getMusicOutput(ctx);output.gain.cancelScheduledValues(ctx.currentTime);output.gain.setTargetAtTime(.72,ctx.currentTime,.035);musicPulse();musicTimer=setInterval(musicPulse,3440)}
 function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}if(audioCtx&&musicOutput){musicOutput.gain.cancelScheduledValues(audioCtx.currentTime);musicOutput.gain.setTargetAtTime(.0001,audioCtx.currentTime,.025)}}
 function queltehueCall(){
   if(!soundOn)return;const ctx=getAudioContext();if(!ctx)return;const start=ctx.currentTime+.03;
@@ -1069,21 +1138,32 @@ $('#sound').onclick=()=>{soundOn=!soundOn;$('#sound').textContent=soundOn?'🔊'
 function countTypes(){const c={};world.forEach(r=>c[r.type]=(c[r.type]||0)+1);return c}
 function updateFloorCards(){
   let completed=0;
-  Object.entries(floorDefinitions).forEach(([floor,definition],index)=>{
+  Object.entries(floorDefinitions).filter(([floor])=>floor!=='integrado').forEach(([floor,definition],index)=>{
     const card=$(`#floor-${floor}`),done=floorProgress[floor];if(done)completed++;
-    card.classList.toggle('active',floor===activeFloor&&!freeMode);card.classList.toggle('done',done);
+    card.classList.toggle('active',floor===activeFloor&&!freeMode&&!integratedMode);card.classList.toggle('done',done);
     card.querySelector('.badge').textContent=done?'✓':String(index+1);
-    card.querySelector('.floorSelect').textContent=floor===activeFloor&&!freeMode?'Paisaje activo':done?'Volver a explorar':'Construir este paisaje';
+    card.querySelector('.floorSelect').textContent=floor===activeFloor&&!freeMode&&!integratedMode?'Paisaje activo':done?'Volver a explorar':'Construir este paisaje';
   });
-  $('#missionBtn').innerHTML=`🎯 Conociendo el paisaje <strong>${completed}/3</strong>`;
-  $('#freeMode').style.display=completed===3?'block':'none';
+  mission1Done=completed===3;const grandCompleted=(mission1Done?1:0)+(mission2Done?1:0);
+  $('#missionBtn').innerHTML=`🎯 Grandes misiones <strong>${grandCompleted}/2</strong>`;
+  $('#grandMission2').classList.toggle('done',mission2Done);$('#integratedMode').textContent=integratedMode?'Tablero integrado activo':mission2Done?'Volver al tablero conectado':'Construir los tres paisajes juntos';
+  $('#freeMode').style.display=mission2Done?'block':'none';
+}
+function countZoneTypes(required,minK,maxK){
+  const present=new Set();world.forEach(record=>{if(record.k>=minK&&record.k<=maxK)present.add(record.type)});return required.filter(type=>present.has(type)).length;
 }
 function evaluate(silent=false){
+  if(integratedMode){
+    const andino=countZoneTypes(floorDefinitions.andino.required,0,3),valle=countZoneTypes(floorDefinitions.valle.required,4,7),costero=countZoneTypes(floorDefinitions.costero.required,8,11);
+    const waterZones=[0,1,2].map(zone=>{let found=false;world.forEach(record=>{if(record.type==='water'&&Math.floor(record.k/4)===zone)found=true});return found}),seaAtCoast=countZoneTypes(['seaWater'],8,11)===1,connected=waterZones.every(Boolean)&&seaAtCoast,wasDone=mission2Done;
+    mission2Done=andino===floorDefinitions.andino.required.length&&valle===floorDefinitions.valle.required.length&&costero===floorDefinitions.costero.required.length&&connected;
+    $('#integratedProgress').textContent=`Cordillera ${andino}/${floorDefinitions.andino.required.length} · Valle ${valle}/${floorDefinitions.valle.required.length} · Costa ${costero}/${floorDefinitions.costero.required.length}\n${connected?'💧 El agua conecta los tres paisajes':'Conecta el agua dulce con el mar'}`;
+    updateFloorCards();if(!silent&&mission2Done&&!wasDone){toast('🌎 ¡Completaste la Gran misión 2!');beep(840,.18);confetti(70)}return;
+  }
   const c=countTypes(),definition=floorDefinitions[activeFloor],found=definition.required.filter(type=>(c[type]||0)>0),wasDone=floorProgress[activeFloor];
   $(`#progress-${activeFloor}`).textContent=`${found.length} de ${definition.required.length} elementos esenciales`;
   if(found.length===definition.required.length)floorProgress[activeFloor]=true;
-  mission1Done=Object.values(floorProgress).every(Boolean);mission2Done=false;updateFloorCards();
-  if(!silent&&floorProgress[activeFloor]&&!wasDone){toast(`¡Küme! Completaste el ${definition.label.toLowerCase()}`);beep(720,.14);confetti(mission1Done?60:28);renderTabs();renderItems()}
+  updateFloorCards();if(!silent&&floorProgress[activeFloor]&&!wasDone){toast(`¡Küme! Completaste el ${definition.label.toLowerCase()}`);beep(720,.14);confetti(mission1Done?60:28);renderTabs();renderItems()}
 }
 function confetti(n){
   const colors=['#a94332','#d89a35','#4a9ac2','#fff7e7','#4f8b45','#241a13'];
@@ -1106,12 +1186,14 @@ function act(x,y){
   }else if(selectedMover){
     const host=c.record&&c.j>0?c.record:null;startMovement(selectedMover,c.i,c.k,host);return;
   }else if(pieces[selected].kind==='block'){
-    if(selected==='water'&&getMoversAtCell(c.i,c.k).length){toast('Primero mueve a quienes están en esa casilla');return}
+    if((selected==='water'||selected==='seaWater')&&getMoversAtCell(c.i,c.k).length){toast('Primero mueve a quienes están en esa casilla');return}
     const previous=paintGround(c.i,c.k,selected);
     if(previous){undoStack.push({op:'paint',i:c.i,k:c.k,type:previous});beep(470,.05);openInfoOnce(selected);feedback={type:selected,i:c.i,k:c.k}}
   }else{
     const normal=hit.face?hit.face.normal:new THREE.Vector3(0,1,0);
     const i=c.j===0?c.i:c.i+Math.round(normal.x),j=1,k=c.j===0?c.k:c.k+Math.round(normal.z);
+    const ground=world.get(key(i,0,k));
+    if(strictAquaticMovers.has(selected)&&(!ground||!['water','seaWater'].includes(ground.type))){toast('Este animal necesita agua para ubicarse');return}
     if(world.has(key(i,j,k))||getMoversAtCell(i,k).length||reservedDestinations.has(key(i,0,k))){toast('Ese espacio ya está ocupado');return}
     if(place(i,j,k,selected)){undoStack.push({op:'remove',i,j,k});beep(470,.05);openInfoOnce(selected);feedback={type:selected,i,k}}
   }
@@ -1164,7 +1246,7 @@ $('#reset').onclick=()=>{
   cancelActiveMovement();clearMoverSelection();
   [...world.keys()].forEach(k=>{const [i,j,l]=k.split(',').map(Number);remove(i,j,l)});
   undoStack.length=0;shownInfo.clear();resetLandscapeFeedback();clearAllIndicators();resetClouds();if('speechSynthesis'in window)speechSynthesis.cancel();
-  if(!freeMode)floorProgress[activeFloor]=false;initialWorld(activeFloor);evaluate(true);renderTabs();renderItems();toast('Paisaje reiniciado');
+  if(integratedMode)mission2Done=false;else if(!freeMode&&activeFloor!=='integrado')floorProgress[activeFloor]=false;initialWorld(activeFloor);evaluate(true);renderTabs();renderItems();toast('Paisaje reiniciado');
 };
 
 setTimeout(()=>{$('#helpChip').style.opacity='0'},6500);
