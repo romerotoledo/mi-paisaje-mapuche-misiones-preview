@@ -53,7 +53,7 @@ assert.doesNotMatch(html, /child:\{cat:'social'/);
 const piecesSource = html.slice(html.indexOf("const pieces={"), html.indexOf("let category="));
 const categoryIds = category => [...piecesSource.matchAll(new RegExp(`(\\w+):\\{cat:'${category}'`, "g"))].map(match => match[1]).sort();
 assert.deepEqual(categoryIds("social"), ["boy", "elder", "girl", "kona", "man", "toki", "woman"]);
-assert.deepEqual(categoryIds("ceremonial"), ["foye", "ketruMetawe", "kuel", "kultrun", "lonko", "machi", "menkuwe", "rewe"]);
+assert.deepEqual(categoryIds("ceremonial"), ["chemamull", "eltun", "foye", "ketruMetawe", "kuel", "kultrun", "lonko", "machi", "menkuwe", "rewe"]);
 assert.match(html, /mapu:'Lonko',es:'Autoridad comunitaria'/);
 assert.match(html, /mapu:'Foye',es:'Canelo'/);
 assert.match(html, /function palisade\(\)/);
@@ -68,9 +68,9 @@ assert.match(html, /function startMusic\(\)/);
 assert.match(html, /function kultrunBeat\(/);
 assert.match(html, /function pifilcaNote\(/);
 assert.match(html, /const musicPhrases=\[/);
-assert.ok((html.match(/\[[\d.,]+\]/g) || []).length >= 8, "La música debe contener varias frases");
+assert.ok((html.match(/\[[\d.,]+\]/g) || []).length >= 10, "La música debe contener al menos diez frases nuevas");
 assert.match(html, /const musicDrums=\[/);
-assert.match(html, /setInterval\(musicPulse,3440\)/);
+assert.match(html, /setInterval\(musicPulse,4120\)/);
 assert.match(html, /inspiradas en timbres de kultrun y pifilca/);
 assert.match(html, /no reproduce cantos ni melodías ceremoniales/);
 assert.match(html, /function getNaturalSpanishVoice\(\)/);
@@ -79,7 +79,7 @@ assert.match(html, /mapu\.rate=\.84;mapu\.pitch=1/);
 assert.match(html, /se lee solamente su nombre en mapudungun/);
 assert.doesNotMatch(html, /SpeechSynthesisUtterance\(pieces\[id\]\.es\)/, "La voz no debe leer el nombre en español");
 assert.doesNotMatch(html, /const pronunciations=/);
-assert.match(html, /src="\.\/relations\.js\?v=20260802-3"/);
+assert.match(html, /src="\.\/relations\.js\?v=20260802-4"/);
 for (const fn of [
   "getObjectsByType", "getObjectsByCategory", "gridDistance", "isNear",
   "isNearAny", "countNearby", "getNearbyObjects", "evaluateMalalProtection",
@@ -97,6 +97,9 @@ assert.match(html, /function registerAnimation\(/);
 assert.match(html, /function animateEntry\(/);
 assert.match(html, /function animateAnimalIdle\(/);
 assert.match(html, /animateAnimalIdle\(entry,time\)/);
+assert.match(html, /function animateHumanIdle\(/);
+assert.match(html, /animateHumanIdle\(entry,time\)/);
+assert.match(html, /humanMovers\.has\(entry\.type\)/);
 assert.match(html, /entry\.mesh\.position\.y=entry\.baseY\+breath\*\.025/);
 assert.match(html, /entry\.mesh\.rotation\.z=step\*\.028/);
 assert.match(html, /entry\.mesh\.scale\.set\(1-breath\*\.012,1\+breath\*\.022,1-breath\*\.012\)/);
@@ -169,18 +172,22 @@ assert.match(html, /reservedDestinations/);
 assert.match(html, /op:'move'/);
 assert.match(html, /updateActiveMovement\(delta\)/);
 assert.match(html, /id="moveStatus"/);
-for (const id of ["quinoa", "ketruMetawe", "menkuwe", "kona", "toki"]) {
+for (const id of ["quinoa", "ketruMetawe", "menkuwe", "eltun", "chemamull", "kona", "toki"]) {
   assert.match(html, new RegExp(`${id}:\\{cat:`), `${id} debe existir`);
 }
 assert.match(html, /Gran misión 3 · Crear el paisaje del lof/);
 assert.match(html, /lofSocial:\{label:'Vida social del lof'/);
 assert.match(html, /lofPublic:\{label:'Espacio público y ceremonial'/);
+assert.match(html, /lofAll:\{label:'Paisaje completo del lof'/);
 assert.match(html, /function spawnLofIntruder\(\)/);
 assert.match(html, /record\.intruder=true/);
 assert.match(html, /record\.k<=2/);
 assert.match(html, /Este animal debe volver manualmente al borde natural/);
 assert.match(html, /isNear\('foye','rewe',2\)/);
 assert.match(html, /isNear\('kultrun','machi',2\)/);
+assert.match(html, /isNear\('chemamull','eltun',2\)/);
+assert.match(html, /chemamullCount===2/);
+assert.match(html, /categories\.every\(\(\[id\]\)=>used\.has\(id\)\)/);
 assert.match(html, /Grandes misiones <strong>\$\{grandCompleted\}\/3/);
 
 console.log("OK: HTML estático, relaciones, animaciones reutilizables, audio, recursos y controles táctiles validados.");

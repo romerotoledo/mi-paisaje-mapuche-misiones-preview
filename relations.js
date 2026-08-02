@@ -7,7 +7,7 @@
 
   const MALAL_TYPES=['fence','fort'];
   const CROP_TYPES=['corn','potato','quinoa'];
-  const CEREMONIAL_TYPES=['machi','lonko','rewe','kultrun','kuel','foye','ketruMetawe','menkuwe'];
+  const CEREMONIAL_TYPES=['machi','lonko','rewe','kultrun','kuel','foye','ketruMetawe','menkuwe','eltun','chemamull'];
   const WETLAND_FAUNA_TYPES=['swan','bandurria','frog'];
   const WILD_ANIMAL_TYPES=['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','seagull','whale','hawk'];
   const DOMESTIC_ANIMAL_TYPES=['chicken','camelid'];

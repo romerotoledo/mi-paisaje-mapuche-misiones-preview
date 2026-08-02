@@ -36,6 +36,12 @@ Se ejecutó `index.html` desde un servidor HTTP local y se controló la página 
 - La categoría social incluye Kona y Toki, ambos móviles, y la misión de vida social exige dos personas mayores para representar a los abuelos.
 - El corral de empalizada acepta solamente gallinas y chiliweke; los animales silvestres no pueden ocuparlo y el malal comunitario se mantiene separado.
 - Consola sin errores ni advertencias durante las pruebas de ambas submisiones, aparición silvestre, movimiento y colocación de cerámica.
+- La Gran misión 3 muestra ahora tres submisiones en móvil; el panel sigue siendo desplazable y los botones conservan una altura táctil adecuada.
+- Eltun y Chemamüll aparecen en Ceremoniales. Ambos se colocaron realmente en casillas vecinas y el progreso reconoció la relación `chemamüll/eltun` y el conteo 1/2.
+- La representación del eltun utiliza montículos, vegetación y un borde de piedras, sin cruces genéricas; el chemamüll se representa como una figura antropomorfa tallada en madera.
+- Paisaje completo abrió las siete categorías y mostró el progreso `0 de 7 categorías utilizadas`, sin restringir la biblioteca de elementos.
+- Se activó la nueva composición y se dejó correr más de un ciclo de 4,12 segundos sin errores ni advertencias de consola.
+- El registro de animaciones incluye todos los tipos de personajes humanos y aplica respiración, balanceo corporal y cambio mínimo de apoyo cuando están quietos.
 
 ## Validado automáticamente
 

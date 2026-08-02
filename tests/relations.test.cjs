@@ -66,6 +66,13 @@ assert.equal(relations.animalHabitatAllows('pudu',4,4,false,'valle'),true);
 assert.equal(relations.animalHabitatAllows('pudu',4,4,false,'andino'),false);
 assert.ok(relations.CEREMONIAL_TYPES.includes('ketruMetawe'));
 assert.ok(relations.CEREMONIAL_TYPES.includes('menkuwe'));
+assert.ok(relations.CEREMONIAL_TYPES.includes('eltun'));
+assert.ok(relations.CEREMONIAL_TYPES.includes('chemamull'));
+
+{
+  const eltun=object('eltun',4,4,'ceremonial'),chemamull=object('chemamull',5,4,'ceremonial');
+  assert.equal(relations.isNear([eltun,chemamull],'chemamull','eltun',2),true);
+}
 
 {
   const puma=object('puma',4,4),pudu=object('pudu',6,4),condor=object('condor',9,9);
