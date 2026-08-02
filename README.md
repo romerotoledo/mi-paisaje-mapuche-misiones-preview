@@ -16,17 +16,17 @@ En la **Gran misión 3 · Crear el paisaje del lof** hay tres submisiones:
 2. Espacio público y ceremonial: rewe, kuel, malal comunitario, foye, kultrung, lonko, machi, kona, toki, ketru metawe, meñkuwe, eltun y chemamüll. Para completar la misión, el foye debe quedar junto al rewe, el kultrung cerca de la machi y al menos dos chemamüll junto al eltun.
 3. Paisaje completo: habilita todos los elementos del prototipo y propone conectar las siete categorías en un mismo tablero creativo.
 
-El tablero aplica reglas ecológicas: cada animal solo puede ubicarse y desplazarse dentro de su piso correspondiente en las misiones ecológicas; la fauna silvestre no puede entrar al corral; solo gallinas y chiliweke pueden ocuparlo; y los demás animales mantienen distancia del puma y del zorro. Toda la fauna muestra de manera continua respiración, balanceo o pequeños giros, mientras las aves voladoras conservan sus vuelos periódicos y las demás especies mantienen sus gestos particulares.
+El tablero aplica reglas ecológicas: cada animal solo puede ubicarse y desplazarse dentro de su piso correspondiente en las misiones ecológicas; la fauna silvestre no puede entrar al corral; solo gallinas y chiliweke pueden ocuparlo; y los demás animales mantienen distancia del puma y del zorro. Los 15 animales y los 9 personajes humanos ejecutan periódicamente una secuencia visible de cabeza, cuerpo y reposo. Las aves voladoras conservan sus vuelos y las demás especies mantienen además sus saltos, picoteos, nado o pequeños desplazamientos particulares.
 
 Las nuevas cerámicas y piezas funerarias se representan con descripciones prudentes basadas en referencias del Museo Chileno de Arte Precolombino y del Servicio Nacional del Patrimonio Cultural. El eltun se presenta como un lugar de memoria y los chemamüll como figuras funerarias de madera, evitando tratarlos como decoración genérica. La propuesta visual y lingüística continúa siendo un prototipo que debe validarse con especialistas y hablantes.
 
-El paisaje también tiene ciclos ambientales intermitentes: una nube cruza el tablero dejando lluvia, el volcán libera bocanadas de humo y una brisa mueve suavemente los árboles.
+El paisaje también tiene ciclos ambientales intermitentes: una nube cruza el tablero dejando lluvia, el volcán libera bocanadas de humo y una brisa suave mueve periódicamente los bosques nativos, araucarias y foye.
 
 Las tarjetas muestran los nombres en mapudungun y español. Al tocarlas, la voz lee solamente el nombre mapudungun; la pronunciación sintética es una guía aproximada pendiente de validación por hablantes. El queltehue incorpora además un llamado de alerta sintetizado.
 
 La nueva música original conserva sonidos sintetizados inspirados en timbres de kultrun y pifilca, pero utiliza una composición distinta: diez frases, cinco patrones rítmicos, registro más grave y otra cadencia. No reproduce cantos ni melodías ceremoniales.
 
-Todos los personajes humanos tienen respiración y un cambio suave de apoyo corporal, además de conservar su desplazamiento manual por el tablero.
+Todos los personajes humanos tienen respiración, giro de cabeza y un cambio suave de apoyo corporal, además de conservar su desplazamiento manual por el tablero.
 
 No requiere instalación, compilación ni backend. Funciona como sitio estático y conserva controles táctiles para Safari en iPhone y iPad.
 

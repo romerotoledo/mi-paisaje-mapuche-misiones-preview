@@ -2,6 +2,14 @@
 
 Fecha: 2 de agosto de 2026.
 
+## Movimiento periódico de seres vivos y árboles
+
+- En cada una de las tres grandes misiones, colocar al menos un animal y una persona disponibles.
+- Esperar entre 3 y 14 segundos: comprobar que primero gira o inclina la cabeza, después se inclina suavemente el cuerpo y finalmente vuelve al reposo.
+- Confirmar que el gesto no interrumpe el vuelo del cóndor, halcón y gaviota, el salto del pez, el picoteo de la bandurria, el nado ni el desplazamiento manual.
+- Colocar bosque nativo, araucarias y foye; comprobar que cada copa recibe una brisa suave intermitente y vuelve a quedar quieta.
+- Activar “Reducir movimiento” en el sistema y comprobar que los gestos quedan desactivados.
+
 Se ejecutó `index.html` desde un servidor HTTP local y se controló la página en un navegador Chromium sin modificar el código de producción.
 
 ## Comprobado
