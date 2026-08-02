@@ -9,6 +9,14 @@
   const CROP_TYPES=['corn','potato'];
   const CEREMONIAL_TYPES=['machi','lonko','rewe','kultrun','kuel','foye'];
   const WETLAND_FAUNA_TYPES=['swan','bandurria','frog'];
+  const WILD_ANIMAL_TYPES=['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','seagull','whale','hawk'];
+  const DOMESTIC_ANIMAL_TYPES=['chicken','camelid'];
+  const PREDATOR_TYPES=['puma','fox'];
+  const ANIMAL_HABITATS={
+    puma:'andino',condor:'andino',
+    fox:'valle',pudu:'valle',coipo:'valle',swan:'valle',hawk:'valle',lapwing:'valle',ibis:'valle',chicken:'valle',camelid:'valle',
+    seaLion:'costero',jumpingFish:'costero',seagull:'costero',whale:'costero'
+  };
 
   // Euclidean grid distance is used because diagonal neighbours are genuinely
   // closer than objects separated by the same number of orthogonal steps.
@@ -44,6 +52,25 @@
   function nearestDistance(objects,object,types){
     const nearby=objects.filter(candidate=>candidate!==object&&(Array.isArray(types)?types:[types]).includes(candidate.type));
     return nearby.length?Math.min(...nearby.map(candidate=>gridDistance(object,candidate))):Infinity;
+  }
+
+  function ecologicalFloorAt(i,k,integrated=false,activeFloor='andino'){
+    if(!integrated)return activeFloor;
+    return k<=3?'andino':k<=7?'valle':'costero';
+  }
+
+  function animalHabitatAllows(type,i,k,integrated=false,activeFloor='andino'){
+    const habitat=ANIMAL_HABITATS[type];
+    return !habitat||habitat===ecologicalFloorAt(i,k,integrated,activeFloor);
+  }
+
+  function hasPredatorConflict(type,i,k,objects,maxDistance=2,except=null){
+    if(!ANIMAL_HABITATS[type])return false;
+    return objects.some(candidate=>{
+      if(candidate===except||!ANIMAL_HABITATS[candidate.type])return false;
+      if(!PREDATOR_TYPES.includes(type)&&!PREDATOR_TYPES.includes(candidate.type))return false;
+      return gridDistance({i,k},candidate)<=maxDistance;
+    });
   }
 
   function evaluateMalalProtection(object,objects,maxDistance=2){
@@ -120,8 +147,9 @@
 
   return {
     MALAL_TYPES,CROP_TYPES,CEREMONIAL_TYPES,WETLAND_FAUNA_TYPES,
+    WILD_ANIMAL_TYPES,DOMESTIC_ANIMAL_TYPES,PREDATOR_TYPES,ANIMAL_HABITATS,
     gridDistance,getObjectsByType,getObjectsByCategory,getNearbyObjects,
-    isNear,isNearAny,countNearby,evaluateMalalProtection,
+    isNear,isNearAny,countNearby,ecologicalFloorAt,animalHabitatAllows,hasPredatorConflict,evaluateMalalProtection,
     evaluateLandscapeRelations,getRelationScore
   };
 });

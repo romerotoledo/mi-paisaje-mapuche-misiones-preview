@@ -53,6 +53,7 @@ header{position:absolute;z-index:10;left:0;right:0;top:8px;padding:calc(8px + va
 .grandMissionCard{border:2px solid rgba(47,105,64,.3);border-radius:16px;padding:11px;background:#f2f8ed}
 .grandMissionCard.done{border-color:var(--green);background:#e6f3df}
 .grandMissionCard h3{margin:0;font-size:15px}.grandMissionCard p{margin:6px 0;font-size:11px;line-height:1.4}
+.ecologyRule{margin:10px 2px 0;padding:8px;border-radius:11px;background:#e7f0df;color:#2f5938;font-size:10px;line-height:1.4;font-weight:850}
 .integratedProgress{font-size:10px;line-height:1.45;font-weight:900;color:var(--green2);white-space:pre-line}
 #integratedMode{min-height:42px;margin-top:8px;border:0;border-radius:12px;padding:8px 12px;background:#2f6940;color:#fff;font-weight:900;touch-action:manipulation}
 #helpChip{position:absolute;z-index:12;left:50%;top:calc(69px + var(--safe-top));transform:translateX(-50%);max-width:58vw;border:2px solid var(--earth);border-radius:999px;background:var(--panel);box-shadow:var(--shadow);padding:7px 12px;font-size:11px;font-weight:900;text-align:center;transition:opacity .4s}
@@ -179,6 +180,7 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
     <div class="integratedProgress" id="integratedProgress">Cordillera 0/5 · Valle 0/11 · Costa 0/10 · Conexión pendiente</div>
     <button id="integratedMode">Construir los tres paisajes juntos</button>
   </div>
+  <p class="ecologyRule">🐾 Cada animal pertenece a un piso ecológico. La fauna silvestre no entra al corral y todos los animales mantienen distancia del puma y del zorro.</p>
   <button id="freeMode">Ver todos los elementos del prototipo</button>
   <p class="sourceNote">🔊 Al tocar un elemento se lee solamente su nombre en mapudungun, usando la voz más natural disponible. El nombre en español permanece visible como apoyo. La pronunciación mapudungun sigue siendo una guía sintética que requiere validación de hablantes. Se mantiene la música original con percusión y flauta inspiradas en timbres de kultrun y pifilca; no reproduce cantos ni melodías ceremoniales.</p>
 </section>
@@ -278,6 +280,7 @@ const movableTypes=new Set(['puma','fox','condor','pudu','coipo','swan','lapwing
 const flyingMovers=new Set(['condor','swan','jumpingFish','seagull','hawk']),animalMovers=new Set(['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','seagull','whale','hawk','chicken','camelid']);
 const aquaticMovers=new Set(['coipo','swan','seaLion','jumpingFish','whale']),strictAquaticMovers=new Set(['jumpingFish','whale']);
 const humanMovers=new Set(['woman','man','girl','boy','elder','machi','lonko']);
+const wildAnimalTypes=new Set(LandscapeRelations.WILD_ANIMAL_TYPES),domesticAnimalTypes=new Set(LandscapeRelations.DOMESTIC_ANIMAL_TYPES);
 
 const andinoAllowed=['grass','earth','hill','volcano','araucaria','condor','puma'];
 const valleAllowed=['grass','earth','water','wetland','forest','fox','pudu','coipo','swan','hawk','lapwing','ibis'];
@@ -290,6 +293,14 @@ const floorDefinitions={
 };
 let activeFloor='andino',integratedMode=false,floorProgress={andino:false,valle:false,costero:false};
 let category='ambiental', selected='hill', deleting=false, soundOn=true, freeMode=false;
+function animalHabitatAllows(type,i,k){return LandscapeRelations.animalHabitatAllows(type,i,k,integratedMode,activeFloor)}
+function predatorConflict(type,i,k,except=null){return LandscapeRelations.hasPredatorConflict(type,i,k,[...world.values()],2,except)}
+function animalEcologyIssue(type,i,k,except=null){
+  if(!animalMovers.has(type))return '';
+  if(!animalHabitatAllows(type,i,k))return `${pieces[type].es} pertenece al ${floorDefinitions[LandscapeRelations.ANIMAL_HABITATS[type]].label.toLowerCase()}`;
+  if(predatorConflict(type,i,k,except))return 'Los animales deben mantenerse lejos del puma y del zorro';
+  return '';
+}
 const app=$('#app'), scene=new THREE.Scene();
 const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
 let reducedMotion=motionPreference.matches,pageVisible=!document.hidden;
@@ -372,7 +383,7 @@ function contactShadow(radius=.46,opacity=.18,x=0,z=0){
   const m=new THREE.Mesh(new THREE.CircleGeometry(radius,20),new THREE.MeshBasicMaterial({color:0x2d241b,transparent:true,opacity,depthWrite:false}));
   m.rotation.x=-Math.PI/2;m.position.set(x,.012,z);return m;
 }
-const smokeGeometry=new THREE.IcosahedronGeometry(.1,0),smokeMaterial=new THREE.MeshBasicMaterial({color:0xd9d6cf,transparent:true,opacity:.28,depthWrite:false});
+const smokeGeometry=new THREE.IcosahedronGeometry(.1,0),smokeMaterial=new THREE.MeshBasicMaterial({color:0xd9d6cf,transparent:true,opacity:.28,depthWrite:false}),volcanoSmokeMaterial=new THREE.MeshBasicMaterial({color:0x9fa2a0,transparent:true,opacity:.52,depthWrite:false});
 const indicatorGeometry=new THREE.OctahedronGeometry(.09,0),indicatorMaterials={
   good:new THREE.MeshBasicMaterial({color:0x69b84c}),progress:new THREE.MeshBasicMaterial({color:0xe0a43b}),
   suggestion:new THREE.MeshBasicMaterial({color:0x78a9c5}),missing:new THREE.MeshBasicMaterial({color:0x9a8979})
@@ -399,6 +410,8 @@ function updateIndicators(time){
   });
 }
 const cloudGeometry=new THREE.DodecahedronGeometry(.55,0),cloudMaterial=new THREE.MeshStandardMaterial({color:0xf7f5eb,flatShading:true,roughness:1,transparent:true,opacity:.82}),clouds=[];
+const rainDropGeometry=new THREE.CylinderGeometry(.012,.018,.3,4),rainDropMaterial=new THREE.MeshBasicMaterial({color:0x72b9d5,transparent:true,opacity:.7,depthWrite:false});
+let rainCloud=null,rainActive=false,rainElapsed=0,nextRain=8+Math.random()*8;
 function createClouds(){
   const count=lowPowerDevice?2:3;
   for(let n=0;n<count;n++){
@@ -410,6 +423,29 @@ function createClouds(){
 function resetClouds(){clouds.forEach((cloud,n)=>{cloud.position.x=cloud.userData.startX;cloud.position.y=6.4+n*.65;cloud.visible=!reducedMotion})}
 function updateClouds(delta){
   clouds.forEach(cloud=>{cloud.visible=!reducedMotion;if(reducedMotion)return;cloud.position.x+=delta*cloud.userData.speed;if(cloud.position.x>N+9)cloud.position.x=-8});
+}
+function createRainCloud(){
+  rainCloud=new THREE.Group();
+  const rainyMaterial=new THREE.MeshStandardMaterial({color:0x9aa8aa,flatShading:true,roughness:1,transparent:true,opacity:.88});
+  [[0,0,0,1.05],[-.52,-.05,.02,.78],[.55,-.04,-.03,.86],[.08,.2,0,.72]].forEach(p=>{const puff=new THREE.Mesh(cloudGeometry,rainyMaterial);puff.position.set(p[0],p[1],p[2]);puff.scale.setScalar(p[3]);rainCloud.add(puff)});
+  const drops=[];const count=lowPowerDevice?12:20;
+  for(let n=0;n<count;n++){
+    const drop=new THREE.Mesh(rainDropGeometry,rainDropMaterial),column=(n%5)-2,row=Math.floor(n/5);
+    drop.userData={startY:-.55-(row%4)*.52,speed:1.35+(n%4)*.14};drop.position.set(column*.25+(row%2)*.1,drop.userData.startY,(row-1.5)*.18);rainCloud.add(drop);drops.push(drop);
+  }
+  rainCloud.userData.drops=drops;rainCloud.visible=false;scene.add(rainCloud);
+}
+function resetRainCloud(){
+  rainActive=false;rainElapsed=0;nextRain=8+Math.random()*10;
+  if(!rainCloud)return;rainCloud.visible=false;rainCloud.position.set(-5,6.2,5.5);rainCloud.userData.drops.forEach(drop=>drop.position.y=drop.userData.startY);
+}
+function updateRainCloud(delta){
+  if(!rainCloud||reducedMotion){if(rainCloud)rainCloud.visible=false;return}
+  rainElapsed+=delta;
+  if(!rainActive){if(rainElapsed<nextRain)return;rainActive=true;rainElapsed=0;rainCloud.position.set(-4.5,6.2,5.5);rainCloud.visible=true}
+  rainCloud.position.x+=delta*1.05;
+  rainCloud.userData.drops.forEach(drop=>{drop.position.y-=delta*drop.userData.speed;if(drop.position.y<-5)drop.position.y=drop.userData.startY});
+  if(rainCloud.position.x>N+4){rainActive=false;rainElapsed=0;nextRain=24+Math.random()*22;rainCloud.visible=false}
 }
 function human(opts={}){
   const o=Object.assign({clothes:0x5e7049,accent:0xc28b3d,pants:0x33251d,hair:0x241914,skin:0xb77c55,scale:1,skirt:false,poncho:false,grayHair:false,headband:false,staff:false,drum:false},opts);
@@ -615,6 +651,11 @@ function build(type){
     g.add(part(new THREE.ConeGeometry(.75,1.05,14),0x65635a,0,.59,0));
     g.add(part(new THREE.ConeGeometry(.31,.34,14),0xe8ece5,0,1.08,0));
     g.add(part(new THREE.CylinderGeometry(.12,.18,.045,14),0x4a3c35,0,1.22,0));
+    const smoke=[];
+    for(let s=0;s<(lowPowerDevice?4:6);s++){
+      const particle=new THREE.Mesh(smokeGeometry,volcanoSmokeMaterial);particle.userData={delay:s*.13,drift:(s%2?.1:-.09)};particle.visible=false;g.add(particle);smoke.push(particle);
+    }
+    g.userData.smoke=smoke;
   } else if(['puma','fox','pudu'].includes(type)){
     const animal=quadruped(type);g.add(animal);if(type==='pudu')g.userData.head=animal.userData.head;
   } else if(['condor','hawk'].includes(type)){
@@ -693,10 +734,11 @@ function build(type){
 function addTarget(m){targets.push(m)}
 function removeTarget(m){const i=targets.indexOf(m);if(i>=0)targets.splice(i,1)}
 function registerAnimation(type,mesh,i,j,k){
-  if(!['water','seaWater','forest','araucaria','foye','hearth','condor','hawk','seagull','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','whale','chicken'].includes(type))return;
+  if(!animalMovers.has(type)&&!['water','seaWater','forest','araucaria','foye','hearth','volcano'].includes(type))return;
+  const flyer=['condor','hawk','seagull'].includes(type),tree=['forest','araucaria','foye'].includes(type);
   animated.push({
     type,mesh,i,j,k,phase:Math.random()*Math.PI*2,baseX:mesh.position.x,baseY:mesh.position.y,baseZ:mesh.position.z,
-    state:'rest',elapsed:0,nextAction:type==='condor'||type==='hawk'||type==='seagull'?8+Math.random()*12:type==='pudu'?8+Math.random()*12:type==='ibis'?2+Math.random()*3:type==='chicken'?4+Math.random()*7:0,
+    state:'rest',elapsed:0,nextAction:flyer?8+Math.random()*12:tree?5+Math.random()*9:type==='volcano'?4+Math.random()*3:type==='pudu'?8+Math.random()*12:type==='ibis'?2+Math.random()*3:type==='chicken'?4+Math.random()*7:0,
     swayParts:mesh.userData.swayParts||[],smoke:mesh.userData.smoke||[],head:mesh.userData.head||null,flyer:mesh.userData.flyer||null,jumper:mesh.userData.jumper||null,tail:mesh.userData.tail||null,swimmer:mesh.userData.swimmer||null,peckHead:mesh.userData.peckHead||null,peckBaseY:mesh.userData.peckHead?mesh.userData.peckHead.position.y:0
   });
 }
@@ -717,7 +759,28 @@ function animateEntry(entry,time,delta){
     const wave=Math.sin(time*.42+entry.phase);entry.mesh.position.y=entry.baseY+wave*.006;entry.mesh.scale.x=entry.mesh.scale.z=1+wave*.002;return;
   }
   if(entry.type==='forest'||entry.type==='araucaria'||entry.type==='foye'){
-    entry.swayParts.forEach((part,index)=>{part.rotation.z=Math.sin(time*.3+entry.phase+index*.37)*.018;part.rotation.x=Math.cos(time*.24+entry.phase+index*.21)*.008});return;
+    entry.elapsed+=delta;
+    if(entry.state==='rest'){
+      entry.swayParts.forEach(part=>part.rotation.set(0,0,0));
+      if(entry.elapsed>=entry.nextAction){entry.state='breeze';entry.elapsed=0}
+    }else{
+      const duration=5.5,progress=Math.min(1,entry.elapsed/duration),strength=Math.sin(progress*Math.PI);
+      entry.swayParts.forEach((part,index)=>{part.rotation.z=Math.sin(time*1.05+entry.phase+index*.37)*.035*strength;part.rotation.x=Math.cos(time*.82+entry.phase+index*.21)*.016*strength});
+      if(progress>=1){entry.state='rest';entry.elapsed=0;entry.nextAction=10+Math.random()*16;entry.swayParts.forEach(part=>part.rotation.set(0,0,0))}
+    }return;
+  }
+  if(entry.type==='volcano'){
+    entry.elapsed+=delta;
+    if(entry.state==='rest'){
+      entry.smoke.forEach(particle=>particle.visible=false);
+      if(entry.elapsed>=entry.nextAction){entry.state='smoke';entry.elapsed=0}
+    }else{
+      entry.smoke.forEach((particle,index)=>{
+        const life=(entry.elapsed-particle.userData.delay)/4.8;particle.visible=life>=0&&life<1;
+        if(particle.visible){particle.position.set(particle.userData.drift*life+Math.sin(time*.8+index)*.045,1.27+life*1.45,Math.cos(time*.65+index)*.05);particle.scale.setScalar(1+life*2.1)}
+      });
+      if(entry.elapsed>=6){entry.state='rest';entry.elapsed=0;entry.nextAction=16+Math.random()*20;entry.smoke.forEach(particle=>particle.visible=false)}
+    }return;
   }
   if(entry.type==='hearth'){
     entry.smoke.forEach((particle,index)=>{
@@ -742,7 +805,7 @@ function animateEntry(entry,time,delta){
     }return;
   }
   if(entry.type==='pudu'&&entry.head){
-    entry.elapsed+=delta;
+    entry.elapsed+=delta;entry.mesh.position.y=entry.baseY+Math.sin(time*.9+entry.phase)*.012;
     if(entry.state==='rest'&&entry.elapsed>=entry.nextAction){entry.state='look';entry.elapsed=0}
     if(entry.state==='look'){
       const progress=Math.min(1,entry.elapsed/2.6);entry.head.rotation.y=Math.sin(progress*Math.PI)*.34;
@@ -780,6 +843,10 @@ function animateEntry(entry,time,delta){
       entry.mesh.rotation.y=Math.sin(entry.elapsed*2.4)*.16;
       if(entry.elapsed>=entry.duration){entry.mesh.rotation.y=0;entry.state='rest';entry.elapsed=0;entry.nextAction=4+Math.random()*8}
     }
+    return;
+  }
+  if(animalMovers.has(entry.type)){
+    entry.mesh.position.y=entry.baseY+Math.sin(time*.85+entry.phase)*.015;entry.mesh.rotation.y=Math.sin(time*.32+entry.phase)*.065;
   }
 }
 function getMoversAtCell(i,k,except=null){
@@ -788,8 +855,8 @@ function getMoversAtCell(i,k,except=null){
 function getHostedMovers(i,k){return getMoversAtCell(i,k).filter(record=>record.host)}
 function hostAccepts(record,host){
   if(!host)return false;
-  if(aquaticMovers.has(record.type))return false;
-  if(animalMovers.has(record.type))return host.type==='fence'||host.type==='fort';
+  if(wildAnimalTypes.has(record.type))return false;
+  if(domesticAnimalTypes.has(record.type))return host.type==='fence'||host.type==='fort';
   if(humanMovers.has(record.type))return host.type==='ruka'||host.type==='fort';
   return false;
 }
@@ -801,6 +868,7 @@ function hostOffset(hostType,slot){
 function movementCellAvailable(record,i,k,isDestination=false,host=null){
   if(i<0||k<0||i>=N||k>=N)return false;
   const groundCell=world.get(key(i,0,k));if(!groundCell)return false;const isWater=groundCell.type==='water'||groundCell.type==='seaWater';
+  if(animalMovers.has(record.type)&&animalEcologyIssue(record.type,i,k,record))return false;
   if(strictAquaticMovers.has(record.type)&&!isWater)return false;
   if(!flyingMovers.has(record.type)&&!aquaticMovers.has(record.type)&&isWater)return false;
   if(reservedDestinations.has(key(i,0,k))&&!(record.i===i&&record.k===k))return false;
@@ -869,7 +937,11 @@ function cancelActiveMovement(){
 function startMovement(record,i,k,host=null){
   if(activeMove){toast('Espera a que termine el desplazamiento');return false}
   if(record.i===i&&record.k===k&&!host){clearMoverSelection();return false}
-  if(host&&!hostAccepts(record,host)){toast(animalMovers.has(record.type)?'Los animales pueden entrar al malal.':'Las personas pueden volver a la ruka o al recinto.');return false}
+  if(host&&!hostAccepts(record,host)){
+    toast(wildAnimalTypes.has(record.type)?'Los animales silvestres no pueden entrar al corral.':animalMovers.has(record.type)?'Solo los animales domésticos pueden entrar al corral.':'Las personas pueden volver a la ruka o al recinto.');return false
+  }
+  const ecologyIssue=animalMovers.has(record.type)?animalEcologyIssue(record.type,i,k,record):'';
+  if(ecologyIssue){toast(ecologyIssue);return false}
   if(!host&&!movementCellAvailable(record,i,k,true,null)){toast('Ese destino no está libre o no se puede recorrer');return false}
   const path=findMovePath(record,i,k,host);if(!path||path.length<2){toast('No hay una ruta libre hasta ese lugar');return false}
   const oldOffset={x:record.mesh.position.x,z:record.mesh.position.z};record.mesh.userData.isMoving=true;reservedDestinations.add(key(i,0,k));destinationRing.position.set(i,.04,k);destinationRing.visible=true;
@@ -906,7 +978,7 @@ function remove(i,j,k){
   if(pieces[r.type]&&pieces[r.type].kind!=='block')r.mesh.traverse(child=>{
     if(!child.isMesh)return;
     if(child.geometry&&child.geometry!==smokeGeometry)child.geometry.dispose();
-    if(child.material&&child.material!==smokeMaterial)child.material.dispose();
+    if(child.material&&child.material!==smokeMaterial&&child.material!==volcanoSmokeMaterial)child.material.dispose();
   });
   world.delete(key(i,j,k));return {type:r.type,rotation:r.rotation||0};
 }
@@ -933,6 +1005,7 @@ function initialWorld(floor=activeFloor){
 }
 initialWorld();
 createClouds();
+createRainCloud();resetRainCloud();
 
 const target=new THREE.Vector3((N-1)/2,.55,(N-1)/2);let radius=20.5,theta=-.72,phi=.98;
 function updateCamera(){
@@ -991,7 +1064,7 @@ function selectIntegrated(){
   $('#helpChip').textContent='🏔️ Cordillera al fondo · 🌿 Valle al centro · 🌊 Costa al frente';$('#helpChip').style.opacity='1';updateFloorCards();renderTabs();renderItems();evaluate(true);$('#missionPanel').style.display='none';missionPanel=false;toast('Gran misión 2: conecta cordillera, valle y costa');
 }
 $('#integratedMode').onclick=selectIntegrated;
-$('#freeMode').onclick=()=>{integratedMode=false;freeMode=true;category='ambiental';selected='grass';$('#helpChip').textContent='Toca un personaje o animal y luego toca su destino';$('#missionPanel').style.display='none';missionPanel=false;toast('Todos los elementos están disponibles');renderTabs();renderItems()};
+$('#freeMode').onclick=()=>{integratedMode=activeFloor==='integrado';freeMode=true;category='ambiental';selected='grass';$('#helpChip').textContent='Toca un personaje o animal y luego toca su destino';$('#missionPanel').style.display='none';missionPanel=false;toast('Todos los elementos están disponibles');renderTabs();renderItems()};
 function openInfo(id){
   const d=pieces[id];$('#infoIcon').textContent=d.ico;$('#infoMapu').textContent=d.mapu;$('#infoEs').textContent=d.es;$('#infoText').textContent=d.desc;$('#infoCard').style.display='block';
   pronounce(id);
@@ -1194,6 +1267,8 @@ function act(x,y){
     const i=c.j===0?c.i:c.i+Math.round(normal.x),j=1,k=c.j===0?c.k:c.k+Math.round(normal.z);
     const ground=world.get(key(i,0,k));
     if(strictAquaticMovers.has(selected)&&(!ground||!['water','seaWater'].includes(ground.type))){toast('Este animal necesita agua para ubicarse');return}
+    const ecologyIssue=animalMovers.has(selected)?animalEcologyIssue(selected,i,k):'';
+    if(ecologyIssue){toast(ecologyIssue);return}
     if(world.has(key(i,j,k))||getMoversAtCell(i,k).length||reservedDestinations.has(key(i,0,k))){toast('Ese espacio ya está ocupado');return}
     if(place(i,j,k,selected)){undoStack.push({op:'remove',i,j,k});beep(470,.05);openInfoOnce(selected);feedback={type:selected,i,k}}
   }
@@ -1245,7 +1320,7 @@ $('#reset').onclick=()=>{
   if(!confirm('¿Empezar el paisaje nuevamente?'))return;
   cancelActiveMovement();clearMoverSelection();
   [...world.keys()].forEach(k=>{const [i,j,l]=k.split(',').map(Number);remove(i,j,l)});
-  undoStack.length=0;shownInfo.clear();resetLandscapeFeedback();clearAllIndicators();resetClouds();if('speechSynthesis'in window)speechSynthesis.cancel();
+  undoStack.length=0;shownInfo.clear();resetLandscapeFeedback();clearAllIndicators();resetClouds();resetRainCloud();if('speechSynthesis'in window)speechSynthesis.cancel();
   if(integratedMode)mission2Done=false;else if(!freeMode&&activeFloor!=='integrado')floorProgress[activeFloor]=false;initialWorld(activeFloor);evaluate(true);renderTabs();renderItems();toast('Paisaje reiniciado');
 };
 
@@ -1257,7 +1332,7 @@ let lastFrameTime=performance.now();
 function loop(now){
   requestAnimationFrame(loop);const delta=Math.min(.05,Math.max(0,(now-lastFrameTime)/1000));lastFrameTime=now;
   if(!pageVisible)return;
-  const time=now/1000;updateActiveMovement(delta);animated.forEach(entry=>animateEntry(entry,time,delta));updateClouds(delta);updateIndicators(time);
+  const time=now/1000;updateActiveMovement(delta);animated.forEach(entry=>animateEntry(entry,time,delta));updateClouds(delta);updateRainCloud(delta);updateIndicators(time);
   if(selectedMover){moverRing.position.x=selectedMover.mesh.position.x;moverRing.position.z=selectedMover.mesh.position.z;moverRing.scale.setScalar(1+Math.sin(time*4)*.06)}
   if(destinationRing.visible)destinationRing.scale.setScalar(1+Math.sin(time*5)*.1);renderer.render(scene,camera);
 }

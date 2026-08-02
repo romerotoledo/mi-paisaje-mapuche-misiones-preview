@@ -49,4 +49,21 @@ assert.equal(relations.gridDistance(object('a',0,0),object('b',3,4)),5);
 assert.equal(relations.isNear([object('pudu',0,0),object('forest',1,1)],'pudu','forest',2),true);
 assert.equal(relations.isNearAny([object('condor',0,0),object('volcano',3,0)],'condor',['hill','volcano'],4),true);
 
-console.log('OK: distancias, relaciones ecológicas, organización ceremonial y protección por malal validadas.');
+assert.equal(relations.ecologicalFloorAt(4,2,true,'integrado'),'andino');
+assert.equal(relations.ecologicalFloorAt(4,5,true,'integrado'),'valle');
+assert.equal(relations.ecologicalFloorAt(4,9,true,'integrado'),'costero');
+assert.equal(relations.animalHabitatAllows('condor',4,2,true,'integrado'),true);
+assert.equal(relations.animalHabitatAllows('condor',4,5,true,'integrado'),false);
+assert.equal(relations.animalHabitatAllows('whale',4,9,true,'integrado'),true);
+assert.equal(relations.animalHabitatAllows('whale',4,5,true,'integrado'),false);
+assert.equal(relations.animalHabitatAllows('pudu',4,4,false,'valle'),true);
+assert.equal(relations.animalHabitatAllows('pudu',4,4,false,'andino'),false);
+
+{
+  const puma=object('puma',4,4),pudu=object('pudu',6,4),condor=object('condor',9,9);
+  assert.equal(relations.hasPredatorConflict('pudu',6,4,[puma,pudu],2,pudu),true);
+  assert.equal(relations.hasPredatorConflict('condor',9,9,[puma,condor],2,condor),false);
+  assert.equal(relations.hasPredatorConflict('fox',5,4,[puma],2),true);
+}
+
+console.log('OK: distancias, hábitats, depredadores, relaciones ecológicas, organización ceremonial y protección por malal validados.');
