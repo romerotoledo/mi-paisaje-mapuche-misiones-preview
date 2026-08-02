@@ -97,7 +97,14 @@ assert.match(html, /function registerAnimation\(/);
 assert.match(html, /function animateEntry\(/);
 assert.match(html, /function createClouds\(/);
 assert.match(html, /function resetClouds\(/);
+assert.match(html, /function createRainCloud\(/);
+assert.match(html, /function resetRainCloud\(/);
+assert.match(html, /function updateRainCloud\(delta\)/);
+assert.match(html, /nextRain=24\+Math\.random\(\)\*22/);
 assert.match(html, /const smokeGeometry=/);
+assert.match(html, /entry\.type==='volcano'/);
+assert.match(html, /entry\.state='smoke'/);
+assert.match(html, /entry\.state='breeze'/);
 assert.match(html, /lowPowerDevice\?3:4/);
 assert.match(html, /const count=lowPowerDevice\?2:3/);
 assert.match(html, /clearIndicatorsForMesh\(r\.mesh\)/);
@@ -143,8 +150,15 @@ for (const fn of [
   "getMoversAtCell", "hostAccepts", "movementCellAvailable", "findMovePath",
   "selectMover", "startMovement", "updateActiveMovement", "finishMovement", "restoreMove",
 ]) assert.match(html, new RegExp(`function ${fn}\\(`), `${fn} debe existir`);
-assert.match(html, /animalMovers\.has\(record\.type\).*host\.type==='fence'\|\|host\.type==='fort'/s);
+assert.match(html, /wildAnimalTypes\.has\(record\.type\)\)return false/);
+assert.match(html, /domesticAnimalTypes\.has\(record\.type\)\)return host\.type==='fence'\|\|host\.type==='fort'/);
 assert.match(html, /humanMovers\.has\(record\.type\).*host\.type==='ruka'\|\|host\.type==='fort'/s);
+assert.match(html, /function animalHabitatAllows\(/);
+assert.match(html, /function predatorConflict\(/);
+assert.match(html, /function animalEcologyIssue\(/);
+assert.match(html, /Los animales silvestres no pueden entrar al corral/);
+assert.match(html, /Los animales deben mantenerse lejos del puma y del zorro/);
+assert.match(html, /animalMovers\.has\(entry\.type\)/);
 assert.match(html, /groundCell\.type==='water'/);
 assert.match(html, /reservedDestinations/);
 assert.match(html, /op:'move'/);
