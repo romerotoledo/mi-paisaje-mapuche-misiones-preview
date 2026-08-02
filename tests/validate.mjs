@@ -73,8 +73,9 @@ assert.match(html, /inspiradas en timbres de kultrun y pifilca/);
 assert.match(html, /no reproduce cantos ni melodías ceremoniales/);
 assert.match(html, /function getNaturalSpanishVoice\(\)/);
 assert.match(html, /new SpeechSynthesisUtterance\(pieces\[id\]\.mapu\)/);
-assert.match(html, /u\.rate=\.88;u\.pitch=1/);
-assert.match(html, /Cada término se lee tal como está escrito/);
+assert.match(html, /mapu\.rate=\.84;mapu\.pitch=1/);
+assert.match(html, /se lee solamente su nombre en mapudungun/);
+assert.doesNotMatch(html, /SpeechSynthesisUtterance\(pieces\[id\]\.es\)/, "La voz no debe leer el nombre en español");
 assert.doesNotMatch(html, /const pronunciations=/);
 assert.match(html, /src="\.\/relations\.js"/);
 for (const fn of [
@@ -110,7 +111,19 @@ assert.doesNotMatch(html, /\.ctrl\{width:(?:4[0-3]|[0-3]\d)px;height:/, "Los con
 const animationSource=html.slice(html.indexOf("function animateEntry"),html.indexOf("function place"));
 assert.doesNotMatch(animationSource,/new THREE\./,"El ciclo de animación no debe crear geometrías ni materiales");
 assert.match(html, /Prototipo móvil/);
-assert.match(html, /let category='ambiental', selected='grass', deleting=false, soundOn=true, freeMode=true/);
+assert.match(html, /let category='ambiental', selected='hill', deleting=false, soundOn=true, freeMode=false/);
+for (const id of ["seaWater", "sand", "araucaria", "reliefRock", "coipo", "swan", "lapwing", "ibis", "seaLion", "jumpingFish"]) {
+  assert.match(html, new RegExp(`${id}:\\{cat:`), `${id} debe existir`);
+}
+assert.match(html, /andino:\{label:'Paisaje andino'/);
+assert.match(html, /valle:\{label:'Paisaje de valle'/);
+assert.match(html, /required:\['water','grass','forest','wetland','fox','pudu','coipo','swan','hawk','lapwing','ibis'\]/);
+assert.match(html, /costero:\{label:'Paisaje costero'/);
+assert.match(html, /Conociendo el paisaje <strong>\$\{completed\}\/3/);
+assert.match(html, /function queltehueCall\(\)/);
+assert.match(html, /mapu\.onend=queltehueCall/);
+assert.match(html, /entry\.type==='ibis'&&entry\.peckHead/);
+assert.match(html, /entry\.type==='condor'\|\|entry\.type==='hawk'/);
 assert.match(html, /const movableTypes=new Set\(/);
 for (const id of ["camelid", "chicken", "girl", "boy", "woman", "man", "pudu", "condor"]) {
   assert.match(html, new RegExp(`movableTypes[^;]+['"]${id}['"]`));
