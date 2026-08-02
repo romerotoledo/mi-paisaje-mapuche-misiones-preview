@@ -216,7 +216,7 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="./relations.js"></script>
+<script src="./relations.js?v=20260802-2"></script>
 <script>
 const $=s=>document.querySelector(s), N=12, MAXY=8;
 const categories=[
@@ -743,7 +743,7 @@ function registerAnimation(type,mesh,i,j,k){
   });
 }
 function resetAnimatedEntry(entry){
-  entry.mesh.position.set(entry.baseX,entry.baseY,entry.baseZ);entry.mesh.rotation.y=0;entry.mesh.scale.set(1,1,1);
+  entry.mesh.position.set(entry.baseX,entry.baseY,entry.baseZ);entry.mesh.rotation.set(0,0,0);entry.mesh.scale.set(1,1,1);
   entry.swayParts.forEach(part=>part.rotation.set(0,0,0));
   if(entry.head)entry.head.rotation.y=0;
   if(entry.flyer){entry.flyer.position.set(0,0,0);entry.flyer.rotation.set(0,0,0)}
@@ -752,9 +752,17 @@ function resetAnimatedEntry(entry){
   if(entry.peckHead){entry.peckHead.rotation.set(0,0,0);entry.peckHead.position.y=entry.peckBaseY}
   entry.smoke.forEach(particle=>particle.visible=false);
 }
+function animateAnimalIdle(entry,time){
+  if(!animalMovers.has(entry.type))return;
+  const breath=Math.sin(time*1.45+entry.phase),step=Math.sin(time*.72+entry.phase*.7);
+  entry.mesh.position.y=entry.baseY+breath*.025;
+  entry.mesh.rotation.z=step*.028;
+  entry.mesh.scale.set(1-breath*.012,1+breath*.022,1-breath*.012);
+}
 function animateEntry(entry,time,delta){
   if(reducedMotion){resetAnimatedEntry(entry);return}
   if(entry.mesh.userData.isMoving)return;
+  animateAnimalIdle(entry,time);
   if(entry.type==='water'||entry.type==='seaWater'){
     const wave=Math.sin(time*.42+entry.phase);entry.mesh.position.y=entry.baseY+wave*.006;entry.mesh.scale.x=entry.mesh.scale.z=1+wave*.002;return;
   }
@@ -846,7 +854,7 @@ function animateEntry(entry,time,delta){
     return;
   }
   if(animalMovers.has(entry.type)){
-    entry.mesh.position.y=entry.baseY+Math.sin(time*.85+entry.phase)*.015;entry.mesh.rotation.y=Math.sin(time*.32+entry.phase)*.065;
+    entry.mesh.rotation.y=Math.sin(time*.46+entry.phase)*.12;
   }
 }
 function getMoversAtCell(i,k,except=null){
@@ -896,7 +904,7 @@ function findMovePath(record,destinationI,destinationK,host=null){
 function animationFor(record){return animated.find(entry=>entry.mesh===record.mesh)||null}
 function syncRecordAnimation(record){
   const entry=animationFor(record);if(!entry)return;
-  entry.i=record.i;entry.j=record.j;entry.k=record.k;entry.baseX=record.mesh.position.x;entry.baseY=record.mesh.position.y;entry.baseZ=record.mesh.position.z;entry.state='rest';entry.elapsed=0;
+  entry.i=record.i;entry.j=record.j;entry.k=record.k;entry.baseX=record.mesh.position.x;entry.baseY=record.mesh.position.y;entry.baseZ=record.mesh.position.z;entry.state='rest';entry.elapsed=0;entry.mesh.rotation.set(0,0,0);entry.mesh.scale.set(1,1,1);
   if(entry.head)entry.head.rotation.y=0;if(entry.flyer){entry.flyer.position.set(0,0,0);entry.flyer.rotation.set(0,0,0)}
 }
 function updateMoverStatus(){
