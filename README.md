@@ -10,7 +10,7 @@ En la **Gran misión 1 · Conociendo el paisaje**, el jugador construye por sepa
 
 En la **Gran misión 2 · Conectar la naturaleza**, los tres paisajes se construyen en un mismo tablero. La cordillera, el valle y la costa ocupan zonas distintas y una trayectoria de agua dulce permite observar su conexión con el mar.
 
-El tablero aplica reglas ecológicas: cada animal solo puede ubicarse y desplazarse dentro de su piso correspondiente; la fauna silvestre no puede entrar al corral; y los demás animales mantienen distancia del puma y del zorro. Toda la fauna conserva movimientos ambientales suaves y las aves voladoras continúan realizando vuelos periódicos.
+El tablero aplica reglas ecológicas: cada animal solo puede ubicarse y desplazarse dentro de su piso correspondiente; la fauna silvestre no puede entrar al corral; y los demás animales mantienen distancia del puma y del zorro. Toda la fauna muestra de manera continua respiración, balanceo o pequeños giros, mientras las aves voladoras conservan sus vuelos periódicos y las demás especies mantienen sus gestos particulares.
 
 El paisaje también tiene ciclos ambientales intermitentes: una nube cruza el tablero dejando lluvia, el volcán libera bocanadas de humo y una brisa mueve suavemente los árboles.
 

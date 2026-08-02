@@ -79,7 +79,7 @@ assert.match(html, /mapu\.rate=\.84;mapu\.pitch=1/);
 assert.match(html, /se lee solamente su nombre en mapudungun/);
 assert.doesNotMatch(html, /SpeechSynthesisUtterance\(pieces\[id\]\.es\)/, "La voz no debe leer el nombre en español");
 assert.doesNotMatch(html, /const pronunciations=/);
-assert.match(html, /src="\.\/relations\.js"/);
+assert.match(html, /src="\.\/relations\.js\?v=20260802-2"/);
 for (const fn of [
   "getObjectsByType", "getObjectsByCategory", "gridDistance", "isNear",
   "isNearAny", "countNearby", "getNearbyObjects", "evaluateMalalProtection",
@@ -95,6 +95,11 @@ assert.match(html, /prefers-reduced-motion: reduce/);
 assert.match(html, /visibilitychange/);
 assert.match(html, /function registerAnimation\(/);
 assert.match(html, /function animateEntry\(/);
+assert.match(html, /function animateAnimalIdle\(/);
+assert.match(html, /animateAnimalIdle\(entry,time\)/);
+assert.match(html, /entry\.mesh\.position\.y=entry\.baseY\+breath\*\.025/);
+assert.match(html, /entry\.mesh\.rotation\.z=step\*\.028/);
+assert.match(html, /entry\.mesh\.scale\.set\(1-breath\*\.012,1\+breath\*\.022,1-breath\*\.012\)/);
 assert.match(html, /function createClouds\(/);
 assert.match(html, /function resetClouds\(/);
 assert.match(html, /function createRainCloud\(/);
