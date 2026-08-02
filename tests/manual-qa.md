@@ -45,6 +45,11 @@ Se ejecutó `index.html` desde un servidor HTTP local y se controló la página 
 - El corral de empalizada acepta solamente gallinas y chiliweke; los animales silvestres no pueden ocuparlo y el malal comunitario se mantiene separado.
 - Consola sin errores ni advertencias durante las pruebas de ambas submisiones, aparición silvestre, movimiento y colocación de cerámica.
 - La Gran misión 3 muestra ahora tres submisiones en móvil; el panel sigue siendo desplazable y los botones conservan una altura táctil adecuada.
+- Vida social se revisó nuevamente en 390 × 844 px: su paleta contiene familia, lonko, producción y elementos domésticos, pero no muestra kona ni toki.
+- Intentar colocar maíz antes de agregar agua produjo el aviso esperado y no creó el cultivo.
+- Espacio público sí mostró kona y toki en la categoría Social.
+- En Vida social y Espacio público apareció una sola secuencia de nubes lluviosas múltiples y un temblor suave; ambos eventos conservaron la respuesta táctil y no registraron errores de consola.
+- La condición de Vida social exige 18 tipos de elementos, dos abuelos, zorro y puma devueltos y todos los chiliweke dentro del corral. Espacio público exige sus 13 tipos y dos chemamüll, sin condiciones de proximidad adicionales.
 - Eltun y Chemamüll aparecen en Ceremoniales. Ambos se colocaron realmente en casillas vecinas y el progreso reconoció la relación `chemamüll/eltun` y el conteo 1/2.
 - La representación del eltun utiliza montículos, vegetación y un borde de piedras, sin cruces genéricas; el chemamüll se representa como una figura antropomorfa tallada en madera.
 - Paisaje completo abrió las siete categorías y mostró el progreso `0 de 7 categorías utilizadas`, sin restringir la biblioteca de elementos.
