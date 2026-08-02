@@ -12,7 +12,7 @@ En la **Gran misión 2 · Conectar la naturaleza**, los tres paisajes se constru
 
 En la **Gran misión 3 · Crear el paisaje del lof** hay tres submisiones:
 
-1. Vida social: agua, bosque, ruka, fogón, metawe, corral de empalizada, maíz, papa, dawe o quinoa, pesca, chiliweke, gallinas y la familia completa. Dos personas mayores representan a los abuelos. Los cultivos y la pesca exigen agua cercana, la ruka exige árboles cercanos y el chiliweke solo puede ocupar pasto. Durante la etapa aparecen una vez un zorro y una vez un puma en una zona visible y libre de controles. El primer toque los selecciona con prioridad; el segundo toque calcula una ruta hacia la casilla libre más cercana del borde natural. La etapa termina al desplegar sus 18 tipos de elementos, reunir a los dos abuelos, devolver los dos intrusos y llevar todos los chiliweke al corral. Kona y toki permanecen ocultos en esta etapa.
+1. Vida social: agua, bosque, ruka, fogón, metawe, corral de empalizada, maíz, papa, dawe o quinoa, pesca, chiliweke, gallinas y la familia completa. Dos personas mayores representan a los abuelos. Los cultivos y la pesca exigen agua cercana, la ruka exige árboles cercanos y el chiliweke solo puede ocupar pasto. Durante la etapa aparecen una vez un zorro y una vez un puma en una zona visible y libre de controles. Como con los demás seres vivos, el primer toque selecciona al animal y el segundo permite elegir libremente una casilla de destino; para resolver el hito, el jugador debe conducir cada intruso hasta el borde natural. La etapa termina al desplegar sus 18 tipos de elementos, reunir a los dos abuelos, devolver los dos intrusos y llevar todos los chiliweke al corral. Kona y toki permanecen ocultos en esta etapa.
 2. Espacio público y ceremonial: rewe, kuel, malal comunitario, foye, kultrung, lonko, machi, kona, toki, ketru metawe, meñkuwe, eltun y dos chemamüll. La etapa termina cuando todos estos elementos están desplegados; kona y toki aparecen por primera vez aquí.
 3. Paisaje completo: habilita todos los elementos del prototipo y propone conectar las siete categorías en un mismo tablero creativo.
 
@@ -20,13 +20,13 @@ El tablero aplica reglas ecológicas: cada animal solo puede ubicarse y desplaza
 
 Las nuevas cerámicas y piezas funerarias se representan con descripciones prudentes basadas en referencias del Museo Chileno de Arte Precolombino y del Servicio Nacional del Patrimonio Cultural. El eltun se presenta como un lugar de memoria y los chemamüll como figuras funerarias de madera, evitando tratarlos como decoración genérica. La propuesta visual y lingüística continúa siendo un prototipo que debe validarse con especialistas y hablantes.
 
-El paisaje también tiene ciclos ambientales intermitentes: una nube cruza el tablero dejando lluvia, el volcán libera bocanadas de humo y una brisa suave mueve periódicamente los bosques nativos, araucarias y foye. En Vida social y Espacio público cruza un grupo de tres nubes lluviosas; el temblor suave ocurre una vez, aproximadamente tres minutos después de comenzar la etapa.
+El paisaje también tiene ciclos ambientales intermitentes: una nube cruza el tablero dejando lluvia, el volcán libera bocanadas de humo y una brisa suave mueve periódicamente los bosques nativos, araucarias y foye. En Vida social y Espacio público hay dos pasadas de tres nubes lluviosas; la segunda deja una acumulación visible de agua en una casilla libre, sin contarla como elemento colocado por el jugador. El primer temblor ocurre aproximadamente tres minutos después de comenzar la etapa y el segundo aparece más tarde con mayor intensidad.
 
-Al completar Vida social o Espacio público, el juego muestra la misma celebración de las misiones anteriores: aviso explícito, sonido de logro y confeti abundante.
+Cada vez que se completa un paisaje, una submisión o una Gran misión, el juego muestra una celebración consistente: aviso explícito, acorde de logro y confeti abundante. Las celebraciones de cierre de Gran misión son más intensas.
 
 Las tarjetas muestran los nombres en mapudungun y español. Al tocarlas, la voz lee solamente el nombre mapudungun; la pronunciación sintética es una guía aproximada pendiente de validación por hablantes. El queltehue incorpora además un llamado de alerta sintetizado.
 
-La nueva música original conserva sonidos sintetizados inspirados en timbres de kultrun y pifilca, pero utiliza una composición distinta: diez frases, cinco patrones rítmicos, registro más grave y otra cadencia. No reproduce cantos ni melodías ceremoniales.
+Cada Gran misión posee una música original diferente. Las tres composiciones combinan golpes sintetizados de tambor con llamadas inspiradas en la trutruka y emplean seis frases, seis patrones rítmicos y duraciones variables por misión para reducir la monotonía. No reproducen cantos ni melodías ceremoniales ni sustituyen una interpretación musical validada culturalmente.
 
 Todos los personajes humanos tienen respiración, giro de cabeza y un cambio suave de apoyo corporal, además de conservar su desplazamiento manual por el tablero.
 

@@ -36,7 +36,7 @@ Se ejecutó `index.html` desde un servidor HTTP local y se controló la página 
 - Un niño fue seleccionado, recorrió el tablero evitando el agua y volvió a la entrada de la ruka.
 - Los anillos de selección y destino, el estado “va en camino” y los mensajes de llegada se mostraron correctamente.
 - La consola de la página permaneció sin errores ni advertencias durante los desplazamientos. Los únicos mensajes ajenos observados provenían de una extensión del navegador y no de la página.
-- La nueva frase musical de kultrun y pifilca sintetizados se activó después de una interacción, completó más de un ciclo y pudo apagarse y encenderse nuevamente sin errores de la página.
+- Cada Gran misión seleccionó su propio banco musical de seis frases y seis ritmos. Los golpes de tambor y las llamadas sintetizadas inspiradas en la trutruka usan pausas y ciclos variables; al cambiar de misión se detuvo la secuencia anterior antes de comenzar la nueva.
 - La Gran misión 3 se abrió correctamente en 390 × 844 px y 1280 × 800 px, con sus dos submisiones y el contador general 0/3.
 - Vida social del lof mostró las siete categorías y todos los elementos previos, además de dawe o quinoa. La franja de bosque que representa el medio natural quedó visible.
 - Después de construir cuatro rukas de prueba apareció un Ngürü cerca del poblado. No pudo borrarse, se seleccionó tocando su figura y se desplazó hasta el borde natural; el progreso registró “1 animal devuelto”.
@@ -48,11 +48,11 @@ Se ejecutó `index.html` desde un servidor HTTP local y se controló la página 
 - Vida social se revisó nuevamente en 390 × 844 px: su paleta contiene familia, lonko, producción y elementos domésticos, pero no muestra kona ni toki.
 - Intentar colocar maíz antes de agregar agua produjo el aviso esperado y no creó el cultivo.
 - Espacio público sí mostró kona y toki en la categoría Social.
-- En Vida social y Espacio público apareció una sola secuencia de nubes lluviosas múltiples y un temblor suave; ambos eventos conservaron la respuesta táctil y no registraron errores de consola.
+- En Vida social y Espacio público se programaron dos secuencias de nubes lluviosas múltiples. La segunda deja un charco celeste visible en una casilla libre, sin modificar el tipo de suelo ni el progreso de la misión.
 - La condición de Vida social exige 18 tipos de elementos, dos abuelos, zorro y puma devueltos y todos los chiliweke dentro del corral. Espacio público exige sus 13 tipos y dos chemamüll, sin condiciones de proximidad adicionales.
-- Se reprodujo la aparición del intruso en 390 × 844 px. El animal quedó fuera de la paleta y de la columna de controles; el primer toque mostró “Pangui/Ngürü seleccionado” aun cuando había una persona cerca. El segundo toque usa una ruta automática hacia una casilla libre del borde natural.
-- El temblor de Vida social y Espacio público queda programado entre 175 y 190 segundos después de iniciar cada etapa.
-- Vida social y Espacio público reutilizan la celebración de las misiones anteriores: mensaje explícito, tono de logro y 70 piezas de confeti.
+- Se reprodujo la aparición del intruso en 390 × 844 px. El animal quedó fuera de la paleta y de la columna de controles; el primer toque mostró “Pangui/Ngürü seleccionado” aun cuando había una persona cerca. Igual que con los demás seres vivos, el segundo toque permite elegir una casilla libre y repetir el desplazamiento hasta llegar al borde natural.
+- El primer temblor de Vida social y Espacio público queda programado entre 175 y 190 segundos después de iniciar cada etapa. El segundo ocurre entre 95 y 120 segundos después y usa una intensidad superior durante 5,8 segundos.
+- Cada paisaje y submisión completados activa una celebración con mensaje, acorde y confeti; el cierre de cada Gran misión utiliza 90 piezas de confeti.
 - Eltun y Chemamüll aparecen en Ceremoniales. Ambos se colocaron realmente en casillas vecinas y el progreso reconoció la relación `chemamüll/eltun` y el conteo 1/2.
 - La representación del eltun utiliza montículos, vegetación y un borde de piedras, sin cruces genéricas; el chemamüll se representa como una figura antropomorfa tallada en madera.
 - Paisaje completo abrió las siete categorías y mostró el progreso `0 de 7 categorías utilizadas`, sin restringir la biblioteca de elementos.

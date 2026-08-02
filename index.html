@@ -209,7 +209,7 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
   </div>
   <p class="ecologyRule">🐾 En las misiones ecológicas cada animal permanece en su piso. En el lof, la fauna silvestre no entra al corral, los animales domésticos evitan a los depredadores y el zorro o puma visitante debe volver al borde natural.</p>
   <button id="freeMode">Ver todos los elementos del prototipo</button>
-  <p class="sourceNote">🔊 Al tocar un elemento se lee solamente su nombre en mapudungun, usando la voz más natural disponible. El nombre en español permanece visible como apoyo. La pronunciación mapudungun sigue siendo una guía sintética que requiere validación de hablantes. La nueva composición original usa percusión y flauta sintetizadas inspiradas en timbres de kultrun y pifilca; no reproduce cantos ni melodías ceremoniales.</p>
+  <p class="sourceNote">🔊 Al tocar un elemento se lee solamente su nombre en mapudungun, usando la voz más natural disponible. El nombre en español permanece visible como apoyo. La pronunciación mapudungun sigue siendo una guía sintética que requiere validación de hablantes. Cada Gran misión tiene una composición original distinta, con golpes de tambor y llamadas sintetizadas inspiradas en la trutruka; no reproduce cantos ni melodías ceremoniales.</p>
 </section>
 
 <div id="helpChip">👆 Toca un ser vivo para moverlo · ✋ Arrastra · 🤏 Pellizca</div>
@@ -480,8 +480,9 @@ function updateIndicators(time){
 }
 const cloudGeometry=new THREE.DodecahedronGeometry(.55,0),cloudMaterial=new THREE.MeshStandardMaterial({color:0xf7f5eb,flatShading:true,roughness:1,transparent:true,opacity:.82}),clouds=[];
 const rainDropGeometry=new THREE.CylinderGeometry(.012,.018,.3,4),rainDropMaterial=new THREE.MeshBasicMaterial({color:0x72b9d5,transparent:true,opacity:.7,depthWrite:false});
-const rainClouds=[];let rainCloud=null,rainActive=false,rainElapsed=0,nextRain=8+Math.random()*8,stageRainCompleted=false;
-let earthquakeState='off',earthquakeElapsed=0,nextEarthquake=Infinity;
+const rainClouds=[];let rainCloud=null,rainActive=false,rainElapsed=0,nextRain=8+Math.random()*8,stageRainPasses=0;
+let rainPuddle=null,rainPuddleElapsed=0;
+let earthquakeState='off',earthquakeElapsed=0,nextEarthquake=Infinity,earthquakePasses=0;
 function createClouds(){
   const count=lowPowerDevice?2:3;
   for(let n=0;n<count;n++){
@@ -507,8 +508,26 @@ function createRainCloud(){
   }
   rainCloud=rainClouds[0];
 }
+function createRainPuddle(){
+  rainPuddle=new THREE.Group();
+  const puddleMaterial=new THREE.MeshBasicMaterial({color:0x69b9d5,transparent:true,opacity:.66,depthWrite:false,side:THREE.DoubleSide});
+  [[0,0,.62,.42],[-.42,.08,.34,.23],[.4,-.05,.28,.19]].forEach(([x,z,sx,sz])=>{
+    const patch=new THREE.Mesh(new THREE.CircleGeometry(1,24),puddleMaterial);patch.rotation.x=-Math.PI/2;patch.position.set(x,.012,z);patch.scale.set(sx,sz,1);rainPuddle.add(patch);
+  });
+  rainPuddle.visible=false;scene.add(rainPuddle);
+}
+function resetRainPuddle(){if(!rainPuddle)return;rainPuddle.visible=false;rainPuddleElapsed=0;rainPuddle.scale.setScalar(.12)}
+function showRainPuddle(){
+  if(!rainPuddle)return false;
+  const preferred=[[6,6],[5,7],[7,6],[4,5],[8,7]],isAvailable=([i,k])=>{
+    const groundCell=world.get(key(i,0,k));return groundCell&&['grass','earth'].includes(groundCell.type)&&!world.has(key(i,1,k))&&!getMoversAtCell(i,k).length;
+  };let available=preferred.find(isAvailable);
+  if(!available){for(let k=3;k<N-2&&!available;k++)for(let i=2;i<N-2;i++)if(isAvailable([i,k])){available=[i,k];break}}
+  if(!available)return false;rainPuddle.position.set(available[0],.49,available[1]);rainPuddleElapsed=0;rainPuddle.scale.setScalar(.12);rainPuddle.visible=true;return true;
+}
+function updateRainPuddle(delta){if(!rainPuddle||!rainPuddle.visible)return;rainPuddleElapsed=Math.min(2.4,rainPuddleElapsed+delta);const scale=.12+.88*(1-Math.pow(1-rainPuddleElapsed/2.4,3));rainPuddle.scale.setScalar(scale)}
 function resetRainCloud(){
-  rainActive=false;rainElapsed=0;stageRainCompleted=false;nextRain=['lofSocial','lofPublic'].includes(activeFloor)&&!freeMode?5+Math.random()*5:8+Math.random()*10;
+  rainActive=false;rainElapsed=0;stageRainPasses=0;nextRain=['lofSocial','lofPublic'].includes(activeFloor)&&!freeMode?5+Math.random()*5:8+Math.random()*10;resetRainPuddle();
   rainClouds.forEach((cloud,index)=>{cloud.visible=false;cloud.position.set(-5-index*1.8,6.2+index*.28,4.7+index*1.2);cloud.userData.drops.forEach(drop=>drop.position.y=drop.userData.startY)});
 }
 function updateRainCloud(delta){
@@ -516,28 +535,35 @@ function updateRainCloud(delta){
   const stageWeather=['lofSocial','lofPublic'].includes(activeFloor)&&!freeMode,activeClouds=stageWeather?rainClouds:[rainCloud];
   rainElapsed+=delta;
   if(!rainActive){
-    if(stageWeather&&stageRainCompleted||rainElapsed<nextRain)return;rainActive=true;rainElapsed=0;
+    if(stageWeather&&stageRainPasses>=2||rainElapsed<nextRain)return;rainActive=true;rainElapsed=0;
     activeClouds.forEach((cloud,index)=>{cloud.position.set(-4.5-index*2.1,6.15+index*.28,4.4+index*1.35);cloud.visible=true});
-    if(stageWeather)toast('🌧️ Varias nubes cruzan el lof y dejan lluvia');
+    if(stageWeather)toast(stageRainPasses===0?'🌧️ Varias nubes cruzan el lof y dejan lluvia':'🌧️ La segunda lluvia es más persistente y comienza a acumular agua');
   }
   activeClouds.forEach(cloud=>{
     if(!cloud.visible)return;cloud.position.x+=delta*1.08;cloud.userData.drops.forEach(drop=>{drop.position.y-=delta*drop.userData.speed;if(drop.position.y<-5)drop.position.y=drop.userData.startY});if(cloud.position.x>N+4)cloud.visible=false;
   });
-  if(activeClouds.every(cloud=>!cloud.visible)){rainActive=false;rainElapsed=0;if(stageWeather){stageRainCompleted=true;nextRain=Infinity}else nextRain=24+Math.random()*22}
+  if(activeClouds.every(cloud=>!cloud.visible)){
+    rainActive=false;rainElapsed=0;
+    if(stageWeather){stageRainPasses++;if(stageRainPasses===1)nextRain=75+Math.random()*35;else{nextRain=Infinity;if(showRainPuddle())toast('💧 La lluvia dejó una acumulación visible de agua en el lof')}}else nextRain=24+Math.random()*22;
+  }
 }
 function resetStageEvents(floor=activeFloor){
-  scene.position.set(0,0,0);earthquakeElapsed=0;earthquakeState=['lofSocial','lofPublic'].includes(floor)&&!freeMode?'waiting':'off';nextEarthquake=earthquakeState==='waiting'?175+Math.random()*15:Infinity;resetRainCloud();
+  scene.position.set(0,0,0);earthquakeElapsed=0;earthquakePasses=0;earthquakeState=['lofSocial','lofPublic'].includes(floor)&&!freeMode?'waiting':'off';nextEarthquake=earthquakeState==='waiting'?175+Math.random()*15:Infinity;resetRainCloud();
+}
+function finishEarthquakePass(){
+  scene.position.set(0,0,0);earthquakeElapsed=0;earthquakePasses++;
+  if(earthquakePasses<2){earthquakeState='waiting';nextEarthquake=95+Math.random()*25}else{earthquakeState='done';nextEarthquake=Infinity}
 }
 function updateEarthquake(delta,time){
   if(earthquakeState==='off'||earthquakeState==='done'){scene.position.set(0,0,0);return}
   earthquakeElapsed+=delta;
   if(earthquakeState==='waiting'){
-    if(earthquakeElapsed<nextEarthquake)return;earthquakeState='shaking';earthquakeElapsed=0;toast('🌎 Se siente un temblor suave en el territorio');
+    if(earthquakeElapsed<nextEarthquake)return;earthquakeState='shaking';earthquakeElapsed=0;toast(earthquakePasses===0?'🌎 Se siente un temblor suave en el territorio':'🌎 Un segundo temblor, más fuerte, recorre el territorio');
   }
-  if(reducedMotion){scene.position.set(0,0,0);earthquakeState='done';return}
-  const duration=4.2,progress=Math.min(1,earthquakeElapsed/duration),envelope=Math.sin(progress*Math.PI),strength=.038*envelope;
+  if(reducedMotion){finishEarthquakePass();return}
+  const secondShake=earthquakePasses===1,duration=secondShake?5.8:4.2,progress=Math.min(1,earthquakeElapsed/duration),envelope=Math.sin(progress*Math.PI),strength=(secondShake?.082:.038)*envelope;
   scene.position.x=Math.sin(time*17.5)*strength;scene.position.z=Math.cos(time*15.2)*strength*.7;
-  if(progress>=1){scene.position.set(0,0,0);earthquakeState='done';earthquakeElapsed=0}
+  if(progress>=1)finishEarthquakePass();
 }
 function human(opts={}){
   const o=Object.assign({clothes:0x5e7049,accent:0xc28b3d,pants:0x33251d,hair:0x241914,skin:0xb77c55,scale:1,skirt:false,poncho:false,grayHair:false,headband:false,staff:false,drum:false,spear:false,toki:false},opts);
@@ -868,6 +894,15 @@ function build(type){
 }
 function addTarget(m){targets.push(m)}
 function removeTarget(m){const i=targets.indexOf(m);if(i>=0)targets.splice(i,1)}
+function configureMoverTouchTargets(record){
+  if(!record||!movableTypes.has(record.type))return;
+  const predator=['puma','fox'].includes(record.type);record.touchTargets=[];
+  if(predator)record.collider.scale.set(1.45,1.35,1.45);
+  record.collider.userData.touchPriority=predator;
+  record.mesh.traverse(child=>{
+    if(!child.isMesh)return;child.userData.record=record;child.userData.touchPriority=predator;addTarget(child);record.touchTargets.push(child);
+  });
+}
 function registerAnimation(type,mesh,i,j,k){
   if(!animalMovers.has(type)&&!humanMovers.has(type)&&!['water','seaWater','forest','araucaria','foye','hearth','volcano'].includes(type))return;
   const flyer=['condor','hawk','seagull'].includes(type),tree=['forest','araucaria','foye'].includes(type);
@@ -1088,7 +1123,7 @@ function finishMovement(move){
   const {record,destination,host,from}=move;world.delete(key(from.i,from.j,from.k));
   const nextJ=host?firstHostSlot(destination.i,destination.k):1;if(nextJ===null){world.set(key(from.i,from.j,from.k),record);cancelActiveMovement();toast('El lugar ya no está disponible');return}
   const offset=host?hostOffset(host.type,nextJ):[0,0];record.i=destination.i;record.j=nextJ;record.k=destination.k;record.host=host?host.type:null;
-  record.mesh.position.set(destination.i+offset[0],.5,destination.k+offset[1]);record.collider.position.set(destination.i+offset[0],1,destination.k+offset[1]);record.collider.userData={i:record.i,j:record.j,k:record.k,record};
+  record.mesh.position.set(destination.i+offset[0],.5,destination.k+offset[1]);record.collider.position.set(destination.i+offset[0],1,destination.k+offset[1]);record.collider.userData={i:record.i,j:record.j,k:record.k,record,touchPriority:['puma','fox'].includes(record.type)};
   world.set(key(record.i,record.j,record.k),record);record.mesh.userData.isMoving=false;syncRecordAnimation(record);reservedDestinations.delete(key(destination.i,0,destination.k));activeMove=null;destinationRing.visible=false;
   undoStack.push({op:'move',record,from,to:{i:record.i,j:record.j,k:record.k,host:record.host}});clearIndicatorsForMesh(record.mesh);showRelationFeedback(record.type,record.i,record.k);
   if(record.intruder&&record.k<=2){record.intruder=false;intrusionsResolved++;nextIntrusionAt=intrusionsResolved<2?Date.now()+6500+Math.random()*3500:Infinity;toast(`🌿 ${pieces[record.type].mapu} volvió a su medio natural`);beep(760,.12)}else toast(movementMessage(record,host));
@@ -1118,15 +1153,11 @@ function startMovement(record,i,k,host=null){
   const oldOffset={x:record.mesh.position.x,z:record.mesh.position.z};record.mesh.userData.isMoving=true;reservedDestinations.add(key(i,0,k));destinationRing.position.set(i,.04,k);destinationRing.visible=true;
   activeMove={record,path,segment:0,progress:0,destination:{i,k},host,from:{i:record.i,j:record.j,k:record.k,host:record.host,x:oldOffset.x,z:oldOffset.z}};updateMoverStatus();beep(540,.06);return true;
 }
-function nearestNaturalCell(record){
-  const candidates=[];for(let k=0;k<=2;k++)for(let i=0;i<N;i++)candidates.push({i,k,distance:Math.hypot(record.i-i,record.k-k)});candidates.sort((a,b)=>a.distance-b.distance);
-  return candidates.find(cell=>movementCellAvailable(record,cell.i,cell.k,true,null)&&findMovePath(record,cell.i,cell.k,null));
-}
 function restoreMove(record,state){
   if(!record||!world.has(key(record.i,record.j,record.k)))return false;
   const occupied=world.get(key(state.i,state.j,state.k));if(occupied&&occupied!==record)return false;
   world.delete(key(record.i,record.j,record.k));record.i=state.i;record.j=state.j;record.k=state.k;record.host=state.host||null;
-  const offset=record.host?hostOffset(record.host,record.j):[0,0];record.mesh.position.set(record.i+offset[0],.5,record.k+offset[1]);record.collider.position.set(record.i+offset[0],1,record.k+offset[1]);record.collider.userData={i:record.i,j:record.j,k:record.k,record};world.set(key(record.i,record.j,record.k),record);syncRecordAnimation(record);return true;
+  const offset=record.host?hostOffset(record.host,record.j):[0,0];record.mesh.position.set(record.i+offset[0],.5,record.k+offset[1]);record.collider.position.set(record.i+offset[0],1,record.k+offset[1]);record.collider.userData={i:record.i,j:record.j,k:record.k,record,touchPriority:['puma','fox'].includes(record.type)};world.set(key(record.i,record.j,record.k),record);syncRecordAnimation(record);return true;
 }
 function place(i,j,k,type,rotation=0){
   if(i<0||k<0||i>=N||k>=N||j<0||j>=MAXY||world.has(key(i,j,k)))return null;
@@ -1141,7 +1172,7 @@ function place(i,j,k,type,rotation=0){
     collider.position.set(i,j,k);collider.userData={i,j,k};scene.add(collider);addTarget(collider);
     registerAnimation(type,mesh,i,j,k);
   }
-  const record={type,mesh,collider,rotation,i,j,k,host:null};collider.userData={i,j,k,record};mesh.userData.worldRecord=record;world.set(key(i,j,k),record);return true;
+  const record={type,mesh,collider,rotation,i,j,k,host:null};collider.userData={i,j,k,record};mesh.userData.worldRecord=record;configureMoverTouchTargets(record);world.set(key(i,j,k),record);return true;
 }
 function remove(i,j,k){
   const r=world.get(key(i,j,k));if(!r)return null;
@@ -1184,7 +1215,7 @@ function initialWorld(floor=activeFloor){
 }
 initialWorld();
 createClouds();
-createRainCloud();resetRainCloud();
+createRainCloud();createRainPuddle();resetRainCloud();
 
 const target=new THREE.Vector3((N-1)/2,.55,(N-1)/2),intruderSpawnProjection=new THREE.Vector3();let radius=20.5,theta=-.72,phi=.98;
 function updateCamera(){
@@ -1236,14 +1267,14 @@ function selectFloor(floor){
   activeFloor=floor;integratedMode=false;freeMode=false;clearLandscape();initialWorld(activeFloor);category='ambiental';selected=floorDefinitions[activeFloor].allowed.find(id=>pieces[id].cat==='ambiental');deleting=false;
   resetStageEvents(activeFloor);
   $('#helpChip').textContent=floor==='lofSocial'?'🌳 Devuelve al zorro y al puma al borde natural':floor==='lofPublic'?'🏛️ Despliega todos los elementos del espacio público':floor==='lofAll'?'🎨 Todos los elementos están disponibles: conecta las 7 categorías':'Toca un personaje o animal y luego toca su destino';$('#helpChip').style.opacity='1';
-  updateFloorCards();renderTabs();renderItems();evaluate(true);$('#missionPanel').style.display='none';missionPanel=false;toast(`Ahora construyes: ${floorDefinitions[floor].label}`);
+  updateFloorCards();renderTabs();renderItems();evaluate(true);$('#missionPanel').style.display='none';missionPanel=false;toast(`Ahora construyes: ${floorDefinitions[floor].label}`);restartMusicForMission();
 }
 document.querySelectorAll('.floorSelect').forEach(button=>button.onclick=()=>selectFloor(button.dataset.floor));
 document.querySelectorAll('.lofSelect').forEach(button=>button.onclick=()=>selectFloor(button.dataset.floor));
 function selectIntegrated(){
   activeFloor='integrado';integratedMode=true;freeMode=false;clearLandscape();initialWorld('integrado');category='ambiental';selected='hill';deleting=false;
   resetStageEvents('integrado');
-  $('#helpChip').textContent='🏔️ Cordillera al fondo · 🌿 Valle al centro · 🌊 Costa al frente';$('#helpChip').style.opacity='1';updateFloorCards();renderTabs();renderItems();evaluate(true);$('#missionPanel').style.display='none';missionPanel=false;toast('Gran misión 2: conecta cordillera, valle y costa');
+  $('#helpChip').textContent='🏔️ Cordillera al fondo · 🌿 Valle al centro · 🌊 Costa al frente';$('#helpChip').style.opacity='1';updateFloorCards();renderTabs();renderItems();evaluate(true);$('#missionPanel').style.display='none';missionPanel=false;toast('Gran misión 2: conecta cordillera, valle y costa');restartMusicForMission();
 }
 $('#integratedMode').onclick=selectIntegrated;
 $('#freeMode').onclick=()=>{integratedMode=activeFloor==='integrado';freeMode=true;resetStageEvents(activeFloor);category='ambiental';selected='grass';$('#helpChip').textContent='Toca un personaje o animal y luego toca su destino';$('#missionPanel').style.display='none';missionPanel=false;toast('Todos los elementos están disponibles');renderTabs();renderItems()};
@@ -1252,7 +1283,10 @@ function openInfo(id){
   pronounce(id);
 }
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2100)}
-function celebrateLofStage(message){toast(message);beep(840,.18);confetti(70)}
+function celebrationSound(grand=false){
+  if(!soundOn)return;const ctx=getAudioContext();if(!ctx)return;const start=ctx.currentTime+.03,notes=grand?[523.25,659.25,783.99,1046.5]:[523.25,659.25,783.99];notes.forEach((freq,index)=>tone(freq,start+index*.11,.34,.027,'sine'));
+}
+function celebrateMilestone(message,grand=false){toast(message);celebrationSound(grand);confetti(grand?90:64)}
 const feedbackTimes=new Map();let lastFeedbackAt=0,lastFeedbackPriority=-1;
 function showLandscapeFeedback(messageId,text,cooldown=16000,priority=1){
   const now=Date.now(),previous=feedbackTimes.get(messageId)||0;
@@ -1311,7 +1345,7 @@ function showRelationFeedback(type,i,k){
   if(general)return showLandscapeFeedback(`general-${type}`,general,22000,1);
   return false;
 }
-let audioCtx=null,musicTimer=null,musicStep=0,audioNoiseBuffer=null,musicOutput=null;
+let audioCtx=null,musicTimer=null,musicStep=0,audioNoiseBuffer=null,musicOutput=null,musicSources=[];
 function getAudioContext(){
   const AudioEngine=window.AudioContext||window.webkitAudioContext;if(!AudioEngine)return null;
   if(!audioCtx)audioCtx=new AudioEngine();
@@ -1325,33 +1359,42 @@ function getNoiseBuffer(ctx){
   if(audioNoiseBuffer)return audioNoiseBuffer;const length=Math.floor(ctx.sampleRate*.7);audioNoiseBuffer=ctx.createBuffer(1,length,ctx.sampleRate);const data=audioNoiseBuffer.getChannelData(0);
   for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*(1-i/length);return audioNoiseBuffer;
 }
+function trackMusicSource(source){musicSources.push(source);source.onended=()=>{const index=musicSources.indexOf(source);if(index>=0)musicSources.splice(index,1)};return source}
 function kultrunBeat(when,accent=1){
   const ctx=getAudioContext();if(!ctx)return;const body=ctx.createOscillator(),bodyGain=ctx.createGain(),skin=ctx.createBufferSource(),skinFilter=ctx.createBiquadFilter(),skinGain=ctx.createGain();
   body.type='sine';body.frequency.setValueAtTime(96,when);body.frequency.exponentialRampToValueAtTime(43,when+.5);bodyGain.gain.setValueAtTime(.0001,when);bodyGain.gain.exponentialRampToValueAtTime(.042*accent,when+.016);bodyGain.gain.exponentialRampToValueAtTime(.0001,when+.55);
   skin.buffer=getNoiseBuffer(ctx);skinFilter.type='bandpass';skinFilter.frequency.value=430;skinFilter.Q.value=.84;skinGain.gain.setValueAtTime(.014*accent,when);skinGain.gain.exponentialRampToValueAtTime(.0001,when+.21);
-  const output=getMusicOutput(ctx);body.connect(bodyGain);bodyGain.connect(output);skin.connect(skinFilter);skinFilter.connect(skinGain);skinGain.connect(output);body.start(when);skin.start(when);body.stop(when+.52);skin.stop(when+.22);
+  const output=getMusicOutput(ctx);body.connect(bodyGain);bodyGain.connect(output);skin.connect(skinFilter);skinFilter.connect(skinGain);skinGain.connect(output);trackMusicSource(body);trackMusicSource(skin);body.start(when);skin.start(when);body.stop(when+.52);skin.stop(when+.22);
 }
-function pifilcaNote(freq,when,duration=.52,accent=1){
-  const ctx=getAudioContext();if(!ctx)return;const voice=ctx.createOscillator(),air=ctx.createOscillator(),gain=ctx.createGain(),filter=ctx.createBiquadFilter();
-  voice.type='sine';voice.frequency.setValueAtTime(freq,when);voice.frequency.linearRampToValueAtTime(freq*1.008,when+duration);air.type='triangle';air.frequency.setValueAtTime(freq*2.01,when);
-  gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(.018*accent,when+.055);gain.gain.setValueAtTime(.014*accent,when+Math.max(.08,duration-.12));gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
-  filter.type='lowpass';filter.frequency.value=2250;filter.Q.value=.62;voice.connect(gain);air.connect(gain);gain.connect(filter);filter.connect(getMusicOutput(ctx));voice.start(when);air.start(when);voice.stop(when+duration+.03);air.stop(when+duration+.03);
+function trutrukaCall(freq,when,duration=.78,accent=1){
+  const ctx=getAudioContext();if(!ctx)return;const voice=ctx.createOscillator(),resonance=ctx.createOscillator(),gain=ctx.createGain(),filter=ctx.createBiquadFilter();
+  voice.type='sawtooth';voice.frequency.setValueAtTime(freq*.985,when);voice.frequency.linearRampToValueAtTime(freq*1.012,when+duration*.7);resonance.type='sine';resonance.frequency.setValueAtTime(freq*2.01,when);
+  gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(.014*accent,when+.09);gain.gain.setValueAtTime(.011*accent,when+Math.max(.14,duration-.18));gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+  filter.type='lowpass';filter.frequency.value=1050;filter.Q.value=1.15;voice.connect(gain);resonance.connect(gain);gain.connect(filter);filter.connect(getMusicOutput(ctx));trackMusicSource(voice);trackMusicSource(resonance);voice.start(when);resonance.start(when);voice.stop(when+duration+.03);resonance.stop(when+duration+.03);
 }
-const musicPhrases=[
-  [349.23,392,466.16,523.25,0,466.16,392],[293.66,349.23,392,466.16,392,0,349.23],
-  [392,466.16,587.33,523.25,466.16,349.23,0],[311.13,0,392,440,523.25,466.16,392],
-  [349.23,440,466.16,0,587.33,523.25,440],[293.66,349.23,466.16,392,349.23,311.13,0],
-  [466.16,523.25,622.25,587.33,466.16,392,349.23],[392,0,523.25,466.16,440,349.23,293.66],
-  [311.13,392,466.16,523.25,466.16,0,311.13],[349.23,466.16,440,392,293.66,311.13,349.23]
-];
-const musicDrums=[[0,.72,1.44,2.16,3.12],[0,.48,1.2,1.92,2.64,3.36],[0,.96,1.68,2.4,3.12],[0,.72,1.2,2.16,2.88,3.36],[0,.48,1.44,2.4,3.12]];
+const musicThemes={
+  mission1:{step:.64,hold:.72,cycles:[6200,6800,6100,7000,6400,6750],phrases:[
+    [196,0,220,246.94,0,220,196,0],[174.61,196,0,220,261.63,0,220,196],[220,246.94,0,293.66,261.63,220,0,196],
+    [196,220,246.94,0,220,174.61,0,196],[174.61,0,196,220,0,246.94,220,174.61],[220,196,174.61,0,196,246.94,0,220]
+  ],drums:[[0,.82,1.68,2.66,4.08],[0,1.18,2.02,3.38,4.54],[0,.64,1.92,3.16,4.46],[0,1.04,1.82,2.88,4.18],[0,.76,2.12,3.04,4.72],[0,1.28,2.36,3.56,4.48]]},
+  mission2:{step:.58,hold:.66,cycles:[5900,6500,6200,6700,6050,6600],phrases:[
+    [174.61,196,220,0,261.63,220,196,0],[196,0,246.94,293.66,0,261.63,220,196],[220,261.63,293.66,0,246.94,220,0,174.61],
+    [174.61,220,0,261.63,293.66,246.94,196,0],[196,246.94,220,0,174.61,196,261.63,0],[261.63,220,196,174.61,0,220,246.94,196]
+  ],drums:[[0,.58,1.42,2.32,3.48,4.34],[0,.92,1.74,2.9,3.76,4.62],[0,.48,1.18,2.2,3.28,4.44],[0,1.12,1.78,2.54,3.72,4.68],[0,.68,1.56,2.76,3.46,4.52],[0,.86,2.02,2.64,3.82,4.72]]},
+  mission3:{step:.7,hold:.84,cycles:[6800,7400,7000,7600,6900,7350],phrases:[
+    [146.83,0,174.61,196,0,174.61,146.83,0],[164.81,196,0,220,196,0,174.61,146.83],[146.83,174.61,196,0,220,196,0,164.81],
+    [174.61,0,220,196,164.81,0,146.83,174.61],[146.83,164.81,0,196,0,220,196,164.81],[196,174.61,146.83,0,164.81,196,0,146.83]
+  ],drums:[[0,1.02,2.04,3.18,4.7],[0,.7,1.82,3.04,4.18,5.12],[0,1.32,2.24,3.66,4.84],[0,.86,2.18,3.28,4.56,5.24],[0,1.16,2.42,3.34,4.92],[0,.76,1.62,2.88,4.06,5.18]]}
+};
+function currentGrandMission(){if(activeFloor==='integrado'||integratedMode)return 'mission2';if(['lofSocial','lofPublic','lofAll'].includes(activeFloor))return 'mission3';return 'mission1'}
 function musicPulse(){
-  if(!soundOn||!audioCtx)return;const now=audioCtx.currentTime+.04,phrase=musicPhrases[musicStep%musicPhrases.length],drums=musicDrums[musicStep%musicDrums.length];
+  if(!soundOn||!audioCtx){musicTimer=null;return}const theme=musicThemes[currentGrandMission()],index=musicStep%theme.phrases.length,now=audioCtx.currentTime+.04,phrase=theme.phrases[index],drums=theme.drums[index%theme.drums.length];
   drums.forEach((offset,index)=>kultrunBeat(now+offset,index===0||index===drums.length-1?1:.68));
-  phrase.forEach((freq,index)=>{if(freq)pifilcaNote(freq,now+.18+index*.52,index===phrase.length-1?.78:.46,index===0?1:.8)});musicStep++;
+  phrase.forEach((freq,noteIndex)=>{if(freq)trutrukaCall(freq,now+.22+noteIndex*theme.step,noteIndex===phrase.length-1?theme.hold*1.18:theme.hold,noteIndex===0?1:.78)});musicStep++;musicTimer=setTimeout(musicPulse,theme.cycles[index]);
 }
-function startMusic(){if(!soundOn||musicTimer)return;const ctx=getAudioContext();if(!ctx)return;const output=getMusicOutput(ctx);output.gain.cancelScheduledValues(ctx.currentTime);output.gain.setTargetAtTime(.72,ctx.currentTime,.035);musicPulse();musicTimer=setInterval(musicPulse,4120)}
-function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}if(audioCtx&&musicOutput){musicOutput.gain.cancelScheduledValues(audioCtx.currentTime);musicOutput.gain.setTargetAtTime(.0001,audioCtx.currentTime,.025)}}
+function startMusic(){if(!soundOn||musicTimer)return;const ctx=getAudioContext();if(!ctx)return;const output=getMusicOutput(ctx);output.gain.cancelScheduledValues(ctx.currentTime);output.gain.setTargetAtTime(.62,ctx.currentTime,.06);musicPulse()}
+function stopMusic(){if(musicTimer){clearTimeout(musicTimer);musicTimer=null}musicSources.splice(0).forEach(source=>{try{source.stop()}catch{}});if(audioCtx&&musicOutput){musicOutput.gain.cancelScheduledValues(audioCtx.currentTime);musicOutput.gain.setTargetAtTime(.0001,audioCtx.currentTime,.025)}}
+function restartMusicForMission(){if(!soundOn)return;stopMusic();musicStep=0;startMusic()}
 function queltehueCall(){
   if(!soundOn)return;const ctx=getAudioContext();if(!ctx)return;const start=ctx.currentTime+.03;
   [0,.17,.33,.56].forEach((offset,index)=>{
@@ -1419,30 +1462,30 @@ function evaluate(silent=false){
     const waterZones=[0,1,2].map(zone=>{let found=false;world.forEach(record=>{if(record.type==='water'&&Math.floor(record.k/4)===zone)found=true});return found}),seaAtCoast=countZoneTypes(['seaWater'],8,11)===1,connected=waterZones.every(Boolean)&&seaAtCoast,wasDone=mission2Done;
     mission2Done=andino===floorDefinitions.andino.required.length&&valle===floorDefinitions.valle.required.length&&costero===floorDefinitions.costero.required.length&&connected;
     $('#integratedProgress').textContent=`Cordillera ${andino}/${floorDefinitions.andino.required.length} · Valle ${valle}/${floorDefinitions.valle.required.length} · Costa ${costero}/${floorDefinitions.costero.required.length}\n${connected?'💧 El agua conecta los tres paisajes':'Conecta el agua dulce con el mar'}`;
-    updateFloorCards();if(!silent&&mission2Done&&!wasDone){toast('🌎 ¡Completaste la Gran misión 2!');beep(840,.18);confetti(70)}return;
+    updateFloorCards();if(!silent&&mission2Done&&!wasDone)celebrateMilestone('🌎 ¡Completaste la Gran misión 2!',true);return;
   }
   if(activeFloor==='lofSocial'){
     const c=countTypes(),found=lofSocialRequired.filter(type=>(c[type]||0)>0),elders=Math.min(2,c.elder||0),camelids=[...world.values()].filter(record=>record.type==='camelid'),camelidsCorral=camelids.length>0&&camelids.every(record=>record.host==='fence'),intrudersClear=intrusionsResolved===2&&![...world.values()].some(record=>record.intruder),wasDone=lofProgress.social;
     lofProgress.social=found.length===lofSocialRequired.length&&elders===2&&camelidsCorral&&intrudersClear;
     $('#progress-lofSocial').textContent=`${found.length} de ${lofSocialRequired.length} elementos · ${elders}/2 abuelos · ${camelidsCorral?'✓ chiliweke en corral':'chiliweke al corral'} · ${intrusionsResolved}/2 intrusos devueltos`;
-    updateFloorCards();if(!silent&&lofProgress.social&&!wasDone)celebrateLofStage('🏡 ¡Completaste la vida social del lof!');return;
+    updateFloorCards();if(!silent&&lofProgress.social&&!wasDone)celebrateMilestone('🏡 ¡Completaste el hito Vida social del lof!');return;
   }
   if(activeFloor==='lofPublic'){
     const c=countTypes(),found=lofPublicRequired.filter(type=>(c[type]||0)>0),chemamullCount=Math.min(2,c.chemamull||0),wasDone=lofProgress.public;
     lofProgress.public=found.length===lofPublicRequired.length&&chemamullCount===2;
     $('#progress-lofPublic').textContent=`${found.length} de ${lofPublicRequired.length} elementos desplegados · ${chemamullCount}/2 chemamüll`;
-    updateFloorCards();if(!silent&&lofProgress.public&&!wasDone)celebrateLofStage('🥁 ¡Completaste el espacio público y ceremonial!');return;
+    updateFloorCards();if(!silent&&lofProgress.public&&!wasDone)celebrateMilestone('🥁 ¡Completaste el hito Espacio público y ceremonial!');return;
   }
   if(activeFloor==='lofAll'){
     const used=new Set();world.forEach(record=>{if(record.j>0&&pieces[record.type])used.add(pieces[record.type].cat)});const wasDone=lofProgress.all;
     lofProgress.all=categories.every(([id])=>used.has(id));
     $('#progress-lofAll').textContent=`${used.size} de ${categories.length} categorías utilizadas`;
-    updateFloorCards();if(!silent&&lofProgress.all&&!wasDone){toast('🎨 ¡Completaste el paisaje libre del lof!');beep(900,.18);confetti(60)}return;
+    updateFloorCards();if(!silent&&lofProgress.all&&!wasDone)celebrateMilestone('🎨 ¡Completaste el paisaje completo y la Gran misión 3!',true);return;
   }
   const c=countTypes(),definition=floorDefinitions[activeFloor],found=definition.required.filter(type=>(c[type]||0)>0),wasDone=floorProgress[activeFloor];
   $(`#progress-${activeFloor}`).textContent=`${found.length} de ${definition.required.length} elementos esenciales`;
   if(found.length===definition.required.length)floorProgress[activeFloor]=true;
-  updateFloorCards();if(!silent&&floorProgress[activeFloor]&&!wasDone){toast(`¡Küme! Completaste el ${definition.label.toLowerCase()}`);beep(720,.14);confetti(mission1Done?60:28);renderTabs();renderItems()}
+  updateFloorCards();if(!silent&&floorProgress[activeFloor]&&!wasDone){celebrateMilestone(mission1Done?`🌄 ¡Completaste el ${definition.label.toLowerCase()} y la Gran misión 1!`:`¡Küme! Completaste el ${definition.label.toLowerCase()}`,mission1Done);renderTabs();renderItems()}
 }
 function spawnLofIntruder(){
   if(activeFloor!=='lofSocial'||freeMode||intrusionsSpawned>=2||[...world.values()].some(record=>record.intruder))return false;
@@ -1452,7 +1495,7 @@ function spawnLofIntruder(){
     if(screenX>72&&screenX<innerWidth-92&&screenY>150&&screenY<innerHeight-235)candidates.push(cell);
   }
   const pool=candidates.length?candidates:fallback;if(!pool.length){nextIntrusionAt=Date.now()+10000;return false}
-  const cell=pool[Math.floor(Math.random()*pool.length)],type=intrusionOrder[intrusionsSpawned++];place(cell.i,1,cell.k,type);const record=world.get(key(cell.i,1,cell.k));record.intruder=true;record.collider.scale.set(1.65,1.55,1.65);record.collider.userData.touchPriority=true;record.touchTargets=[];record.mesh.traverse(child=>{if(child.isMesh){child.userData.record=record;child.userData.touchPriority=true;addTarget(child);record.touchTargets.push(child)}});nextIntrusionAt=Infinity;showObjectIndicator({mesh:record.mesh},'suggestion',9000);toast(`⚠️ Apareció ${pieces[type].mapu}: tócalo y luego toca el borde natural`);beep(310,.2);evaluate(true);return true;
+  const cell=pool[Math.floor(Math.random()*pool.length)],type=intrusionOrder[intrusionsSpawned++];place(cell.i,1,cell.k,type);const record=world.get(key(cell.i,1,cell.k));record.intruder=true;record.collider.scale.set(1.65,1.55,1.65);record.collider.userData.touchPriority=true;record.touchTargets.forEach(child=>child.userData.touchPriority=true);nextIntrusionAt=Infinity;showObjectIndicator({mesh:record.mesh},'suggestion',9000);toast(`⚠️ Apareció ${pieces[type].mapu}: tócalo y luego elige su destino hacia el borde natural`);beep(310,.2);evaluate(true);return true;
 }
 function updateLofIntrusion(){if(activeFloor==='lofSocial'&&!freeMode&&Date.now()>=nextIntrusionAt)spawnLofIntruder()}
 window.spawnLofIntruder=spawnLofIntruder;
@@ -1462,24 +1505,22 @@ function confetti(n){
 }
 evaluate(true);
 
-const raycaster=new THREE.Raycaster(),ndc=new THREE.Vector2(),intruderTouchPoint=new THREE.Vector3();
+const raycaster=new THREE.Raycaster(),ndc=new THREE.Vector2(),moverTouchPoint=new THREE.Vector3();
 function ndcFrom(x,y){const r=renderer.domElement.getBoundingClientRect();ndc.x=((x-r.left)/r.width)*2-1;ndc.y=-((y-r.top)/r.height)*2+1}
-function intruderAtScreen(x,y){
-  const rect=renderer.domElement.getBoundingClientRect();let nearest=null,bestDistance=Math.max(58,Math.min(rect.width,rect.height)*.1);
+function moverAtScreen(x,y){
+  const rect=renderer.domElement.getBoundingClientRect();let nearest=null,bestDistance=Infinity;
   world.forEach(record=>{
-    if(!record.intruder)return;record.collider.getWorldPosition(intruderTouchPoint);intruderTouchPoint.project(camera);
-    const screenX=rect.left+(intruderTouchPoint.x+1)*rect.width/2,screenY=rect.top+(1-intruderTouchPoint.y)*rect.height/2,distance=Math.hypot(screenX-x,screenY-y);
-    if(distance<bestDistance){bestDistance=distance;nearest=record}
+    if(!movableTypes.has(record.type))return;record.collider.getWorldPosition(moverTouchPoint);moverTouchPoint.project(camera);
+    const screenX=rect.left+(moverTouchPoint.x+1)*rect.width/2,screenY=rect.top+(1-moverTouchPoint.y)*rect.height/2,distance=Math.hypot(screenX-x,screenY-y),touchRadius=['puma','fox'].includes(record.type)?Math.max(58,Math.min(rect.width,rect.height)*.1):Math.max(38,Math.min(rect.width,rect.height)*.065);
+    if(distance<=touchRadius&&distance<bestDistance){bestDistance=distance;nearest=record}
   });return nearest;
 }
 function act(x,y){
-  const waitingIntruder=!deleting?[...world.values()].find(record=>record.intruder):null,directIntruder=waitingIntruder?intruderAtScreen(x,y):null;
-  if(directIntruder&&selectedMover!==directIntruder){selectMover(directIntruder);return}
-  if(waitingIntruder&&selectedMover!==waitingIntruder){selectMover(waitingIntruder);toast(`🐾 ${pieces[waitingIntruder.type].mapu} seleccionado · toca el borde natural`);return}
-  if(selectedMover&&selectedMover.intruder){const destination=nearestNaturalCell(selectedMover);if(destination)startMovement(selectedMover,destination.i,destination.k);else toast('No hay una ruta libre hacia el borde natural');return}
+  const directMover=!deleting?moverAtScreen(x,y):null;
+  if(directMover){if(selectedMover===directMover)clearMoverSelection();else selectMover(directMover);return}
   ndcFrom(x,y);raycaster.setFromCamera(ndc,camera);
   const hits=raycaster.intersectObjects(targets,false);if(!hits.length)return;
-  const intruderHit=hits.find(candidate=>candidate.object.userData.touchPriority&&candidate.object.userData.record&&candidate.object.userData.record.intruder),movableHit=intruderHit||hits.find(candidate=>candidate.object.userData.record&&movableTypes.has(candidate.object.userData.record.type)),hit=!deleting&&movableHit?movableHit:hits[0];
+  const movableHit=hits.find(candidate=>candidate.object.userData.record&&movableTypes.has(candidate.object.userData.record.type)),hit=selectedMover?hits[0]:!deleting&&movableHit?movableHit:hits[0];
   const c=hit.object.userData;let feedback=null;
   if(deleting){
     if(c.j===0){toast('La base del paisaje no se borra');return}
@@ -1568,7 +1609,7 @@ let lastFrameTime=performance.now();
 function loop(now){
   requestAnimationFrame(loop);const delta=Math.min(.05,Math.max(0,(now-lastFrameTime)/1000));lastFrameTime=now;
   if(!pageVisible)return;
-  const time=now/1000;updateActiveMovement(delta);updateLofIntrusion();animated.forEach(entry=>animateEntry(entry,time,delta));updateClouds(delta);updateRainCloud(delta);updateEarthquake(delta,time);updateIndicators(time);
+  const time=now/1000;updateActiveMovement(delta);updateLofIntrusion();animated.forEach(entry=>animateEntry(entry,time,delta));updateClouds(delta);updateRainCloud(delta);updateRainPuddle(delta);updateEarthquake(delta,time);updateIndicators(time);
   if(selectedMover){moverRing.position.x=selectedMover.mesh.position.x;moverRing.position.z=selectedMover.mesh.position.z;moverRing.scale.setScalar(1+Math.sin(time*4)*.06)}
   if(destinationRing.visible)destinationRing.scale.setScalar(1+Math.sin(time*5)*.1);renderer.render(scene,camera);
 }
