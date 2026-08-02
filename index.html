@@ -55,7 +55,8 @@ header{position:absolute;z-index:10;left:0;right:0;top:8px;padding:calc(8px + va
 .grandMissionCard h3{margin:0;font-size:15px}.grandMissionCard p{margin:6px 0;font-size:11px;line-height:1.4}
 .ecologyRule{margin:10px 2px 0;padding:8px;border-radius:11px;background:#e7f0df;color:#2f5938;font-size:10px;line-height:1.4;font-weight:850}
 .integratedProgress{font-size:10px;line-height:1.45;font-weight:900;color:var(--green2);white-space:pre-line}
-#integratedMode{min-height:42px;margin-top:8px;border:0;border-radius:12px;padding:8px 12px;background:#2f6940;color:#fff;font-weight:900;touch-action:manipulation}
+#integratedMode,.lofSelect{min-height:42px;margin-top:8px;border:0;border-radius:12px;padding:8px 12px;background:#2f6940;color:#fff;font-weight:900;touch-action:manipulation}
+.lofMissionGrid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:9px}.lofMission{border:1px solid rgba(97,69,47,.23);border-radius:13px;padding:8px;background:#fffdf6}.lofMission.active{border:2px solid var(--ochre);background:#fff5d9}.lofMission.done{border-color:var(--green);background:#edf7e7}.lofMission h4{margin:0;font-size:12px}.lofMission p{margin:4px 0;font-size:9.5px}.lofProgress{font-size:9px;line-height:1.35;font-weight:900;color:var(--green2)}.lofSelect{width:100%;min-height:38px;padding:6px;font-size:10px}
 #helpChip{position:absolute;z-index:12;left:50%;top:calc(69px + var(--safe-top));transform:translateX(-50%);max-width:58vw;border:2px solid var(--earth);border-radius:999px;background:var(--panel);box-shadow:var(--shadow);padding:7px 12px;font-size:11px;font-weight:900;text-align:center;transition:opacity .4s}
 #moveStatus{display:none;position:absolute;z-index:18;left:50%;top:calc(112px + var(--safe-top));transform:translateX(-50%);max-width:78vw;border:2px solid #2f6940;border-radius:999px;background:rgba(244,255,236,.97);box-shadow:var(--shadow);padding:8px 14px;color:#244a2e;font-size:12px;font-weight:900;text-align:center;pointer-events:none}
 #moveStatus.show{display:block}
@@ -99,6 +100,7 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
 .institutionalCopy small{display:block;margin-top:2px;font-size:8px;font-weight:800}
 @keyframes fall{to{transform:translateY(108vh) rotate(700deg)}}
 @media(min-width:768px){
+  .lofMissionGrid{grid-template-columns:repeat(3,1fr)}
   #missionBtn{left:calc(18px + var(--safe-left));top:calc(78px + var(--safe-top));font-size:15px}
   #missionPanel{left:calc(18px + var(--safe-left));top:calc(134px + var(--safe-top));width:390px}
   #controls{right:calc(18px + var(--safe-right));top:calc(78px + var(--safe-top))}
@@ -151,7 +153,7 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
   <img class="institutionalLogo institutionalLogoUa" src="./assets/institucional/universidad-autonoma.png" alt="Universidad Autónoma de Chile">
 </aside>
 
-<button id="missionBtn">🎯 Grandes misiones <strong>0/2</strong></button>
+<button id="missionBtn">🎯 Grandes misiones <strong>0/3</strong></button>
 <section id="missionPanel">
   <h2>Gran misión 1 · Conociendo el paisaje</h2>
   <p class="floorIntro">Construye tres pisos ecológicos. En cada uno encontrarás solamente los elementos propios de ese ambiente.</p>
@@ -180,9 +182,34 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
     <div class="integratedProgress" id="integratedProgress">Cordillera 0/5 · Valle 0/11 · Costa 0/10 · Conexión pendiente</div>
     <button id="integratedMode">Construir los tres paisajes juntos</button>
   </div>
-  <p class="ecologyRule">🐾 Cada animal pertenece a un piso ecológico. La fauna silvestre no entra al corral y todos los animales mantienen distancia del puma y del zorro.</p>
+  <div class="missionDivider"></div>
+  <div class="grandMissionCard" id="grandMission3">
+    <h3>Gran misión 3 · Crear el paisaje del lof</h3>
+    <p>Construye la vida social, el espacio público y ceremonial, y finalmente un paisaje libre con toda la biblioteca.</p>
+    <div class="lofMissionGrid">
+      <div class="lofMission" id="lof-social-card">
+        <h4>1 · Vida social</h4>
+        <p>Ruka, fogón, cerámica, corral, cultivos, ganadería y familia.</p>
+        <div class="lofProgress" id="progress-lofSocial">0 de 14 elementos · 0/2 abuelos</div>
+        <button class="lofSelect" data-floor="lofSocial">Construir el lof</button>
+      </div>
+      <div class="lofMission" id="lof-public-card">
+        <h4>2 · Espacio público</h4>
+        <p>Rewe, kuel, malal, foye, eltun, chemamüll, cerámicas y autoridades.</p>
+        <div class="lofProgress" id="progress-lofPublic">0 de 13 elementos · 0/2 chemamüll</div>
+        <button class="lofSelect" data-floor="lofPublic">Construir el espacio</button>
+      </div>
+      <div class="lofMission" id="lof-all-card">
+        <h4>3 · Paisaje completo</h4>
+        <p>Usa libremente todos los elementos y conecta las siete categorías.</p>
+        <div class="lofProgress" id="progress-lofAll">0 de 7 categorías utilizadas</div>
+        <button class="lofSelect" data-floor="lofAll">Crear libremente</button>
+      </div>
+    </div>
+  </div>
+  <p class="ecologyRule">🐾 En las misiones ecológicas cada animal permanece en su piso. En el lof, la fauna silvestre no entra al corral, los animales domésticos evitan a los depredadores y el zorro o puma visitante debe volver al borde natural.</p>
   <button id="freeMode">Ver todos los elementos del prototipo</button>
-  <p class="sourceNote">🔊 Al tocar un elemento se lee solamente su nombre en mapudungun, usando la voz más natural disponible. El nombre en español permanece visible como apoyo. La pronunciación mapudungun sigue siendo una guía sintética que requiere validación de hablantes. Se mantiene la música original con percusión y flauta inspiradas en timbres de kultrun y pifilca; no reproduce cantos ni melodías ceremoniales.</p>
+  <p class="sourceNote">🔊 Al tocar un elemento se lee solamente su nombre en mapudungun, usando la voz más natural disponible. El nombre en español permanece visible como apoyo. La pronunciación mapudungun sigue siendo una guía sintética que requiere validación de hablantes. La nueva composición original usa percusión y flauta sintetizadas inspiradas en timbres de kultrun y pifilca; no reproduce cantos ni melodías ceremoniales.</p>
 </section>
 
 <div id="helpChip">👆 Toca un ser vivo para moverlo · ✋ Arrastra · 🤏 Pellizca</div>
@@ -216,7 +243,7 @@ footer{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:16px calc(8p
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="./relations.js?v=20260802-2"></script>
+<script src="./relations.js?v=20260802-4"></script>
 <script>
 const $=s=>document.querySelector(s), N=12, MAXY=8;
 const categories=[
@@ -252,12 +279,13 @@ const pieces={
 
   corn:{cat:'productivo',kind:'obj',ico:'🌽',mapu:'Wa',es:'Maíz',desc:'El maíz puede cultivarse en una chacra y forma parte de diferentes preparaciones.'},
   potato:{cat:'productivo',kind:'obj',ico:'🥔',mapu:'Poñü',es:'Papa',desc:'La papa crece bajo la tierra y ha sido un alimento importante en el sur.'},
+  quinoa:{cat:'productivo',kind:'obj',ico:'🌾',mapu:'Dawe',es:'Quinoa',desc:'El dawe o quinoa es un cultivo antiguo del territorio, aprovechado por sus semillas.'},
   fishing:{cat:'productivo',kind:'obj',ico:'🎣',mapu:'Challwatun',es:'Pesca',desc:'La pesca se realiza junto a ríos, lagos o el mar. Necesita agua cercana.'},
 
   ruka:{cat:'domestico',kind:'obj',ico:'🏠',mapu:'Ruka',es:'Casa',desc:'La ruka es un espacio de vida familiar y comunitaria. Allí se cocina, conversa y trabaja.'},
   hearth:{cat:'domestico',kind:'obj',ico:'🔥',mapu:'Kütral',es:'Fogón',desc:'El fogón entrega calor y permite cocinar. También reúne a las personas.'},
   metawe:{cat:'domestico',kind:'obj',ico:'🏺',mapu:'Metawe',es:'Jarro',desc:'El metawe es una vasija usada para guardar o servir líquidos.'},
-  fence:{cat:'domestico',kind:'obj',ico:'🪵',mapu:'Malal',es:'Empalizada',desc:'El malal se representa como una empalizada cerrada que delimita y protege un espacio doméstico o productivo.'},
+  fence:{cat:'domestico',kind:'obj',ico:'🪵',mapu:'Malal',es:'Corral de empalizada',desc:'Este corral de empalizada recibe gallinas y chiliweke. Se distingue del malal o fuerte comunitario.'},
   chicken:{cat:'domestico',kind:'obj',ico:'🐔',mapu:'Achawall',es:'Gallina',desc:'La gallina forma parte de la vida doméstica en épocas históricas.'},
   camelid:{cat:'domestico',kind:'obj',ico:'🦙',mapu:'Chiliweke',es:'Camélido',desc:'El chiliweke fue un animal doméstico importante antes de la llegada europea.'},
 
@@ -269,34 +297,49 @@ const pieces={
   foye:{cat:'ceremonial',kind:'obj',ico:'🌳',mapu:'Foye',es:'Canelo',desc:'El foye o canelo es un árbol de gran importancia ceremonial y medicinal.'},
   machi:{cat:'ceremonial',kind:'obj',ico:'🥁',mapu:'Machi',es:'Autoridad espiritual',desc:'La machi cumple funciones espirituales y medicinales, y participa en ceremonias importantes para la comunidad.'},
   lonko:{cat:'ceremonial',kind:'obj',ico:'🪶',mapu:'Lonko',es:'Autoridad comunitaria',desc:'El lonko cumple un papel de conducción, representación y organización dentro de la comunidad, y puede participar en encuentros y ceremonias. Sus funciones pueden variar según el territorio, el contexto y el periodo.'},
+  ketruMetawe:{cat:'ceremonial',kind:'obj',ico:'🦆',mapu:'Ketru metawe',es:'Jarro-pato',desc:'Vasija con forma de pato vinculada al mundo femenino; puede contener agua o muday en momentos rituales o festivos.'},
+  menkuwe:{cat:'ceremonial',kind:'obj',ico:'🏺',mapu:'Meñkuwe',es:'Gran cántaro de muday',desc:'Gran vasija de dos asas utilizada para guardar muday. Aquí acompaña el espacio de reunión sin fijar un único uso ceremonial.'},
+  eltun:{cat:'ceremonial',kind:'obj',ico:'🌿',mapu:'Eltun',es:'Cementerio mapuche',desc:'El eltun es un cementerio y lugar de memoria. Esta representación educativa simplificada debe tratarse con respeto y no pretende mostrar una disposición única.'},
+  chemamull:{cat:'ceremonial',kind:'obj',ico:'🗿',mapu:'Chemamüll',es:'Figura funeraria de madera',desc:'El chemamüll es una figura antropomorfa de madera vinculada históricamente a contextos funerarios. Se ubica junto al eltun como memoria de quienes han partido.'},
 
   woman:{cat:'social',kind:'obj',ico:'👩',mapu:'Domo',es:'Mujer',desc:'Las personas participan en la vida familiar, productiva, social y ceremonial.'},
   man:{cat:'social',kind:'obj',ico:'👨',mapu:'Wentru',es:'Hombre',desc:'Las personas participan en la vida familiar, productiva, social y ceremonial.'},
   girl:{cat:'social',kind:'obj',ico:'👧',mapu:'Pichi domo',es:'Niña',desc:'Las niñas aprenden observando, jugando y participando en la vida comunitaria.'},
   boy:{cat:'social',kind:'obj',ico:'👦',mapu:'Pichi wentru',es:'Niño',desc:'Los niños aprenden observando, jugando y participando en la vida comunitaria.'},
-  elder:{cat:'social',kind:'obj',ico:'🧓',mapu:'Fücha che',es:'Persona mayor',desc:'Las personas mayores conservan recuerdos, experiencias y conocimientos importantes.'}
+  elder:{cat:'social',kind:'obj',ico:'🧓',mapu:'Fücha che',es:'Persona mayor',desc:'Las personas mayores conservan recuerdos, experiencias y conocimientos importantes. Puedes poner dos para representar a los abuelos.'},
+  kona:{cat:'social',kind:'obj',ico:'🛡️',mapu:'Kona',es:'Guerrero',desc:'Kona nombra al guerrero o soldado. En esta misión aparece en el espacio público del lof.'},
+  toki:{cat:'social',kind:'obj',ico:'🪓',mapu:'Toki',es:'Autoridad de guerra',desc:'El toki es una autoridad elegida para conducir en contexto de guerra; no corresponde a una jefatura cotidiana permanente.'}
 };
-const movableTypes=new Set(['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','seagull','whale','hawk','chicken','camelid','woman','man','girl','boy','elder','machi','lonko']);
+const movableTypes=new Set(['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','seagull','whale','hawk','chicken','camelid','woman','man','girl','boy','elder','machi','lonko','kona','toki']);
 const flyingMovers=new Set(['condor','swan','jumpingFish','seagull','hawk']),animalMovers=new Set(['puma','fox','condor','pudu','coipo','swan','lapwing','ibis','seaLion','jumpingFish','seagull','whale','hawk','chicken','camelid']);
 const aquaticMovers=new Set(['coipo','swan','seaLion','jumpingFish','whale']),strictAquaticMovers=new Set(['jumpingFish','whale']);
-const humanMovers=new Set(['woman','man','girl','boy','elder','machi','lonko']);
+const humanMovers=new Set(['woman','man','girl','boy','elder','machi','lonko','kona','toki']);
 const wildAnimalTypes=new Set(LandscapeRelations.WILD_ANIMAL_TYPES),domesticAnimalTypes=new Set(LandscapeRelations.DOMESTIC_ANIMAL_TYPES);
 
 const andinoAllowed=['grass','earth','hill','volcano','araucaria','condor','puma'];
 const valleAllowed=['grass','earth','water','wetland','forest','fox','pudu','coipo','swan','hawk','lapwing','ibis'];
 const costeroAllowed=['grass','water','wetland','seaWater','sand','reliefRock','seaLion','jumpingFish','seagull','whale'];
+const lofSocialRequired=['ruka','hearth','metawe','fence','corn','potato','quinoa','camelid','chicken','girl','boy','woman','man','lonko'];
+const lofSocialAllowed=Object.keys(pieces);
+const lofPublicRequired=['rewe','kuel','fort','foye','ketruMetawe','menkuwe','eltun','chemamull','kultrun','lonko','machi','kona','toki'];
+const lofPublicAllowed=['grass','earth','water','forest','wetland','hill','ruka','hearth','metawe','fort','rewe','kuel','foye','ketruMetawe','menkuwe','eltun','chemamull','kultrun','lonko','machi','kona','toki','woman','man','girl','boy','elder'];
+const lofAllAllowed=Object.keys(pieces);
 const floorDefinitions={
   andino:{label:'Paisaje andino',base:'grass',required:['hill','volcano','araucaria','condor','puma'],allowed:andinoAllowed},
   valle:{label:'Paisaje de valle',base:'grass',required:['water','grass','forest','wetland','fox','pudu','coipo','swan','hawk','lapwing','ibis'],allowed:valleAllowed},
   costero:{label:'Paisaje costero',base:'sand',required:['seaWater','water','wetland','grass','sand','reliefRock','seaLion','jumpingFish','seagull','whale'],allowed:costeroAllowed},
-  integrado:{label:'Los tres paisajes conectados',base:'grass',required:[],allowed:[...new Set([...andinoAllowed,...valleAllowed,...costeroAllowed])]}
+  integrado:{label:'Los tres paisajes conectados',base:'grass',required:[],allowed:[...new Set([...andinoAllowed,...valleAllowed,...costeroAllowed])]},
+  lofSocial:{label:'Vida social del lof',base:'grass',required:lofSocialRequired,allowed:lofSocialAllowed},
+  lofPublic:{label:'Espacio público y ceremonial',base:'grass',required:lofPublicRequired,allowed:lofPublicAllowed},
+  lofAll:{label:'Paisaje completo del lof',base:'grass',required:[],allowed:lofAllAllowed}
 };
-let activeFloor='andino',integratedMode=false,floorProgress={andino:false,valle:false,costero:false};
+let activeFloor='andino',integratedMode=false,floorProgress={andino:false,valle:false,costero:false},lofProgress={social:false,public:false,all:false},intrusionsResolved=0,nextIntrusionAt=0;
 let category='ambiental', selected='hill', deleting=false, soundOn=true, freeMode=false;
-function animalHabitatAllows(type,i,k){return LandscapeRelations.animalHabitatAllows(type,i,k,integratedMode,activeFloor)}
+function animalHabitatAllows(type,i,k){return ['lofSocial','lofPublic','lofAll'].includes(activeFloor)||LandscapeRelations.animalHabitatAllows(type,i,k,integratedMode,activeFloor)}
 function predatorConflict(type,i,k,except=null){return LandscapeRelations.hasPredatorConflict(type,i,k,[...world.values()],2,except)}
 function animalEcologyIssue(type,i,k,except=null){
   if(!animalMovers.has(type))return '';
+  if(activeFloor==='lofSocial'&&except&&except.intruder&&LandscapeRelations.PREDATOR_TYPES.includes(type))return '';
   if(!animalHabitatAllows(type,i,k))return `${pieces[type].es} pertenece al ${floorDefinitions[LandscapeRelations.ANIMAL_HABITATS[type]].label.toLowerCase()}`;
   if(predatorConflict(type,i,k,except))return 'Los animales deben mantenerse lejos del puma y del zorro';
   return '';
@@ -448,7 +491,7 @@ function updateRainCloud(delta){
   if(rainCloud.position.x>N+4){rainActive=false;rainElapsed=0;nextRain=24+Math.random()*22;rainCloud.visible=false}
 }
 function human(opts={}){
-  const o=Object.assign({clothes:0x5e7049,accent:0xc28b3d,pants:0x33251d,hair:0x241914,skin:0xb77c55,scale:1,skirt:false,poncho:false,grayHair:false,headband:false,staff:false,drum:false},opts);
+  const o=Object.assign({clothes:0x5e7049,accent:0xc28b3d,pants:0x33251d,hair:0x241914,skin:0xb77c55,scale:1,skirt:false,poncho:false,grayHair:false,headband:false,staff:false,drum:false,spear:false,toki:false},opts);
   const g=new THREE.Group();g.scale.setScalar(o.scale);
   g.add(part(new THREE.BoxGeometry(.105,.34,.13),o.pants,-.09,.19,0));
   g.add(part(new THREE.BoxGeometry(.105,.34,.13),o.pants,.09,.19,0));
@@ -470,6 +513,8 @@ function human(opts={}){
   if(o.headband)g.add(part(new THREE.BoxGeometry(.31,.055,.19),o.accent,0,1.025,.015));
   if(o.staff)g.add(part(new THREE.CylinderGeometry(.023,.028,.96,6),0x5a3a22,.34,.48,0,0,0,.04));
   if(o.drum)g.add(part(new THREE.CylinderGeometry(.14,.15,.09,14),0xa9702f,.25,.52,.2,Math.PI/2,0,0));
+  if(o.spear){g.add(part(new THREE.CylinderGeometry(.016,.02,1.18,6),0x674527,.34,.59,0));g.add(part(new THREE.ConeGeometry(.055,.18,5),0x8b9290,.34,1.27,0))}
+  if(o.toki){g.add(part(new THREE.CylinderGeometry(.018,.023,.72,6),0x624226,.34,.52,0,0,0,-.08));g.add(part(new THREE.BoxGeometry(.2,.13,.055),0x777c79,.38,.86,0,0,0,-.08))}
   return g;
 }
 function quadruped(type){
@@ -607,7 +652,7 @@ function palisade(){
 }
 function build(type){
   const g=new THREE.Group();
-  const largePiece=type==='ruka'||type==='fence'||type==='fort',shadowRadius=largePiece ? .59 : type==='forest'||type==='kuel' ? .54 : .42;
+  const largePiece=type==='ruka'||type==='fence'||type==='fort'||type==='eltun',shadowRadius=largePiece ? .59 : type==='forest'||type==='kuel' ? .54 : .42;
   if(type!=='wetland')g.add(contactShadow(shadowRadius,largePiece ? .22 : .17));
   if(type==='wetland'){
     g.add(part(new THREE.CylinderGeometry(.5,.52,.08,16),0x4f968f,0,.04,0));
@@ -666,15 +711,18 @@ function build(type){
     const animal=waterAnimal(type);g.add(animal);if(type==='jumpingFish')g.userData.jumper=animal.userData.jumper;if(animal.userData.tail)g.userData.tail=animal.userData.tail;if(animal.userData.swimmer)g.userData.swimmer=animal.userData.swimmer;
   } else if(type==='lapwing'||type==='ibis'){
     const animal=valleyBird(type);g.add(animal);g.userData.peckHead=animal.userData.peckHead;
-  } else if(type==='corn'||type==='potato'){
+  } else if(type==='corn'||type==='potato'||type==='quinoa'){
     g.add(part(new THREE.BoxGeometry(.9,.1,.9),0x684529,0,.05,0));
     [[-.25,-.22],[.22,-.18],[-.04,.22],[.26,.24]].forEach((p,i)=>{
       if(type==='potato'){
         g.add(part(new THREE.DodecahedronGeometry(.15,0),0x568c41,p[0],.23,p[1]));
         g.add(part(new THREE.DodecahedronGeometry(.09,0),0x6ca650,p[0]-.08,.31,p[1]));
-      }else{
+      }else if(type==='corn'){
         g.add(part(new THREE.CylinderGeometry(.025,.035,.56,6),0x5c993a,p[0],.39,p[1]));
         g.add(ellipsoid(0xf0c438,p[0],.59,p[1],.07,.16,.07));
+      }else{
+        g.add(part(new THREE.CylinderGeometry(.018,.028,.5,6),0x6b963e,p[0],.32,p[1]));
+        g.add(part(new THREE.ConeGeometry(.09,.3,8),i%2?0xc76f57:0xd69b59,p[0],.64,p[1]));
       }
     });
   } else if(type==='fishing'){
@@ -698,6 +746,36 @@ function build(type){
     g.add(part(new THREE.SphereGeometry(.2,10,8),0xb96e45,0,.22,0));
     g.add(part(new THREE.CylinderGeometry(.08,.11,.16,9),0xb96e45,0,.43,0));
     g.add(part(new THREE.TorusGeometry(.14,.025,6,12,Math.PI*1.65),0xb96e45,.13,.29,0,0,0,.45));
+  } else if(type==='ketruMetawe'){
+    g.add(ellipsoid(0xb65f3f,-.05,.23,0,.28,.2,.19));
+    g.add(part(new THREE.CylinderGeometry(.055,.09,.35,8),0xb65f3f,.19,.43,0,0,0,-.34));
+    g.add(ellipsoid(0xb65f3f,.29,.59,0,.11,.1,.09));
+    g.add(part(new THREE.ConeGeometry(.055,.18,6),0xd18b55,.43,.58,0,0,0,-Math.PI/2));
+    g.add(part(new THREE.ConeGeometry(.12,.24,7),0xb65f3f,-.34,.29,0,0,0,Math.PI/2));
+    g.add(part(new THREE.TorusGeometry(.18,.026,6,14,Math.PI*1.45),0x8e4935,-.02,.34,-.08,0,.35,.55));
+  } else if(type==='menkuwe'){
+    g.add(ellipsoid(0x9b5a3d,0,.31,0,.31,.34,.3));
+    g.add(part(new THREE.CylinderGeometry(.12,.18,.22,10),0x9b5a3d,0,.62,0));
+    [-1,1].forEach(side=>g.add(part(new THREE.TorusGeometry(.16,.027,6,14,Math.PI*1.5),0x7c4432,side*.27,.39,0,0,side*.18,side*.5)));
+    [-.12,.04,.2].forEach(y=>g.add(part(new THREE.TorusGeometry(.25,.018,5,16),0xe1b078,0,.34+y,0,Math.PI/2,0,0)));
+  } else if(type==='eltun'){
+    g.add(part(new THREE.CylinderGeometry(.69,.76,.09,14),0x6e5838,0,.045,0));
+    [[-.27,-.17],[.25,-.12],[0,.25]].forEach((p,index)=>{
+      g.add(ellipsoid(index===1?0x617b45:0x71864d,p[0],.13,p[1],.25,.105,.18));
+      const stone=ellipsoid(0x8b887d,p[0]-.12,.13,p[1]-.12,.075,.055,.06);g.add(stone);
+    });
+    for(let a=0;a<8;a++){const q=a*Math.PI/4;g.add(ellipsoid(0x9a927d,Math.cos(q)*.61,.08,Math.sin(q)*.51,.08,.055,.07))}
+  } else if(type==='chemamull'){
+    const wood=0x885a35,dark=0x624027;
+    g.add(part(new THREE.CylinderGeometry(.12,.18,.78,7),wood,0,.41,0));
+    g.add(part(new THREE.BoxGeometry(.34,.39,.17),wood,0,.76,0));
+    g.add(part(new THREE.BoxGeometry(.31,.065,.19),dark,0,.75,.105,0,0,.36));
+    g.add(part(new THREE.BoxGeometry(.28,.065,.19),dark,0,.86,.105,0,0,-.32));
+    g.add(ellipsoid(wood,0,1.08,0,.19,.22,.17));
+    g.add(part(new THREE.CylinderGeometry(.23,.18,.12,7),dark,0,1.31,0));
+    g.add(part(new THREE.ConeGeometry(.055,.13,5),dark,.16,1.08,.08,0,0,-Math.PI/2));
+    g.add(ellipsoid(0x2e251f,-.065,1.11,.155,.012,.014,.009));
+    g.add(ellipsoid(0x2e251f,.065,1.11,.155,.012,.014,.009));
   } else if(type==='fence')g.add(palisade());
   else if(type==='fort'){
     g.add(part(new THREE.CylinderGeometry(.63,.72,.16,8),0x795232,0,.08,0));
@@ -729,12 +807,14 @@ function build(type){
   else if(type==='elder')g.add(human({clothes:0x69586e,accent:0xc5a46c,scale:.9,grayHair:true,poncho:true,staff:true}));
   else if(type==='machi')g.add(human({clothes:0x315fa8,accent:0x1d2938,skirt:true,poncho:true,headband:true,drum:true,hair:0x161c22}));
   else if(type==='lonko')g.add(human({clothes:0x49372d,accent:0xa94332,poncho:true,headband:true,staff:true,hair:0x22170f}));
+  else if(type==='kona')g.add(human({clothes:0x405b46,accent:0xb64b38,poncho:true,headband:true,spear:true,hair:0x201713}));
+  else if(type==='toki')g.add(human({clothes:0x3e342d,accent:0xd49a37,poncho:true,headband:true,toki:true,hair:0x18120f}));
   return g;
 }
 function addTarget(m){targets.push(m)}
 function removeTarget(m){const i=targets.indexOf(m);if(i>=0)targets.splice(i,1)}
 function registerAnimation(type,mesh,i,j,k){
-  if(!animalMovers.has(type)&&!['water','seaWater','forest','araucaria','foye','hearth','volcano'].includes(type))return;
+  if(!animalMovers.has(type)&&!humanMovers.has(type)&&!['water','seaWater','forest','araucaria','foye','hearth','volcano'].includes(type))return;
   const flyer=['condor','hawk','seagull'].includes(type),tree=['forest','araucaria','foye'].includes(type);
   animated.push({
     type,mesh,i,j,k,phase:Math.random()*Math.PI*2,baseX:mesh.position.x,baseY:mesh.position.y,baseZ:mesh.position.z,
@@ -759,10 +839,19 @@ function animateAnimalIdle(entry,time){
   entry.mesh.rotation.z=step*.028;
   entry.mesh.scale.set(1-breath*.012,1+breath*.022,1-breath*.012);
 }
+function animateHumanIdle(entry,time){
+  if(!humanMovers.has(entry.type))return;
+  const breath=Math.sin(time*.92+entry.phase),weight=Math.sin(time*.46+entry.phase*.8);
+  entry.mesh.position.y=entry.baseY+breath*.012;
+  entry.mesh.rotation.z=weight*.012;
+  entry.mesh.rotation.y=weight*.018;
+  entry.mesh.scale.set(1-breath*.004,1+breath*.009,1-breath*.004);
+}
 function animateEntry(entry,time,delta){
   if(reducedMotion){resetAnimatedEntry(entry);return}
   if(entry.mesh.userData.isMoving)return;
   animateAnimalIdle(entry,time);
+  animateHumanIdle(entry,time);
   if(entry.type==='water'||entry.type==='seaWater'){
     const wave=Math.sin(time*.42+entry.phase);entry.mesh.position.y=entry.baseY+wave*.006;entry.mesh.scale.x=entry.mesh.scale.z=1+wave*.002;return;
   }
@@ -864,7 +953,7 @@ function getHostedMovers(i,k){return getMoversAtCell(i,k).filter(record=>record.
 function hostAccepts(record,host){
   if(!host)return false;
   if(wildAnimalTypes.has(record.type))return false;
-  if(domesticAnimalTypes.has(record.type))return host.type==='fence'||host.type==='fort';
+  if(domesticAnimalTypes.has(record.type))return host.type==='fence';
   if(humanMovers.has(record.type))return host.type==='ruka'||host.type==='fort';
   return false;
 }
@@ -919,7 +1008,8 @@ function selectMover(record){
   selectedMover=record;updateMoverStatus();updateMode();beep(610,.05);
 }
 function movementMessage(record,host){
-  if(host&&(host.type==='fence'||host.type==='fort'))return animalMovers.has(record.type)?`🪵 ${pieces[record.type].mapu} llegó al malal.`:'Llegó al recinto comunitario.';
+  if(host&&host.type==='fence')return `🪵 ${pieces[record.type].mapu} llegó al corral.`;
+  if(host&&host.type==='fort')return 'Llegó al malal comunitario.';
   if(host&&host.type==='ruka')return `🏠 ${pieces[record.type].mapu} volvió a la ruka.`;
   if(record.type==='girl'||record.type==='boy')return '🧭 Puede seguir explorando o volver a la ruka.';
   return `${pieces[record.type].ico} ${pieces[record.type].mapu} llegó a su destino.`;
@@ -930,7 +1020,9 @@ function finishMovement(move){
   const offset=host?hostOffset(host.type,nextJ):[0,0];record.i=destination.i;record.j=nextJ;record.k=destination.k;record.host=host?host.type:null;
   record.mesh.position.set(destination.i+offset[0],.5,destination.k+offset[1]);record.collider.position.set(destination.i+offset[0],1,destination.k+offset[1]);record.collider.userData={i:record.i,j:record.j,k:record.k,record};
   world.set(key(record.i,record.j,record.k),record);record.mesh.userData.isMoving=false;syncRecordAnimation(record);reservedDestinations.delete(key(destination.i,0,destination.k));activeMove=null;destinationRing.visible=false;
-  undoStack.push({op:'move',record,from,to:{i:record.i,j:record.j,k:record.k,host:record.host}});clearIndicatorsForMesh(record.mesh);showRelationFeedback(record.type,record.i,record.k);toast(movementMessage(record,host));updateMoverStatus();evaluate();
+  undoStack.push({op:'move',record,from,to:{i:record.i,j:record.j,k:record.k,host:record.host}});clearIndicatorsForMesh(record.mesh);showRelationFeedback(record.type,record.i,record.k);
+  if(record.intruder&&record.k<=2){record.intruder=false;intrusionsResolved++;nextIntrusionAt=Date.now()+30000+Math.random()*20000;toast(`🌿 ${pieces[record.type].mapu} volvió a su medio natural`);beep(760,.12)}else toast(movementMessage(record,host));
+  updateMoverStatus();evaluate();
 }
 function updateActiveMovement(delta){
   if(!activeMove)return;const move=activeMove,record=move.record,path=move.path;
@@ -1010,6 +1102,10 @@ function initialWorld(floor=activeFloor){
   }
   const base=floorDefinitions[floor]?floorDefinitions[floor].base:'grass';
   for(let i=0;i<N;i++)for(let k=0;k<N;k++)place(i,0,k,base);
+  if(floor==='lofSocial'){
+    [0,3,6,9,11].forEach((i,index)=>place(i,1,index%2?1:2,index===0?'hill':'forest'));
+    nextIntrusionAt=Date.now()+14000;
+  }
 }
 initialWorld();
 createClouds();
@@ -1058,15 +1154,16 @@ $('#missionBtn').onclick=()=>{missionPanel=!missionPanel;$('#missionPanel').styl
 $('.close').onclick=()=>$('#infoCard').style.display='none';
 $('#info').onclick=()=>openInfo(selected);
 function clearLandscape(){
-  cancelActiveMovement();clearMoverSelection();[...world.keys()].forEach(cell=>{const [i,j,k]=cell.split(',').map(Number);remove(i,j,k)});undoStack.length=0;shownInfo.clear();resetLandscapeFeedback();clearAllIndicators();
+  cancelActiveMovement();clearMoverSelection();nextIntrusionAt=0;[...world.keys()].forEach(cell=>{const [i,j,k]=cell.split(',').map(Number);remove(i,j,k)});undoStack.length=0;shownInfo.clear();resetLandscapeFeedback();clearAllIndicators();
 }
 function selectFloor(floor){
   if(!floorDefinitions[floor]||floor==='integrado'||floor===activeFloor&&!freeMode&&!integratedMode)return;
   activeFloor=floor;integratedMode=false;freeMode=false;clearLandscape();initialWorld(activeFloor);category='ambiental';selected=floorDefinitions[activeFloor].allowed.find(id=>pieces[id].cat==='ambiental');deleting=false;
-  $('#helpChip').textContent='Toca un personaje o animal y luego toca su destino';$('#helpChip').style.opacity='1';
+  $('#helpChip').textContent=floor==='lofSocial'?'🌳 Lleva al zorro o puma hacia el borde natural':floor==='lofPublic'?'Reúne foye y rewe; chemamüll y eltun; kultrung y machi':floor==='lofAll'?'🎨 Todos los elementos están disponibles: conecta las 7 categorías':'Toca un personaje o animal y luego toca su destino';$('#helpChip').style.opacity='1';
   updateFloorCards();renderTabs();renderItems();evaluate(true);$('#missionPanel').style.display='none';missionPanel=false;toast(`Ahora construyes: ${floorDefinitions[floor].label}`);
 }
 document.querySelectorAll('.floorSelect').forEach(button=>button.onclick=()=>selectFloor(button.dataset.floor));
+document.querySelectorAll('.lofSelect').forEach(button=>button.onclick=()=>selectFloor(button.dataset.floor));
 function selectIntegrated(){
   activeFloor='integrado';integratedMode=true;freeMode=false;clearLandscape();initialWorld('integrado');category='ambiental';selected='hill';deleting=false;
   $('#helpChip').textContent='🏔️ Cordillera al fondo · 🌿 Valle al centro · 🌊 Costa al frente';$('#helpChip').style.opacity='1';updateFloorCards();renderTabs();renderItems();evaluate(true);$('#missionPanel').style.display='none';missionPanel=false;toast('Gran misión 2: conecta cordillera, valle y costa');
@@ -1152,27 +1249,30 @@ function getNoiseBuffer(ctx){
 }
 function kultrunBeat(when,accent=1){
   const ctx=getAudioContext();if(!ctx)return;const body=ctx.createOscillator(),bodyGain=ctx.createGain(),skin=ctx.createBufferSource(),skinFilter=ctx.createBiquadFilter(),skinGain=ctx.createGain();
-  body.type='sine';body.frequency.setValueAtTime(112,when);body.frequency.exponentialRampToValueAtTime(48,when+.42);bodyGain.gain.setValueAtTime(.0001,when);bodyGain.gain.exponentialRampToValueAtTime(.045*accent,when+.012);bodyGain.gain.exponentialRampToValueAtTime(.0001,when+.48);
-  skin.buffer=getNoiseBuffer(ctx);skinFilter.type='bandpass';skinFilter.frequency.value=520;skinFilter.Q.value=.72;skinGain.gain.setValueAtTime(.016*accent,when);skinGain.gain.exponentialRampToValueAtTime(.0001,when+.18);
+  body.type='sine';body.frequency.setValueAtTime(96,when);body.frequency.exponentialRampToValueAtTime(43,when+.5);bodyGain.gain.setValueAtTime(.0001,when);bodyGain.gain.exponentialRampToValueAtTime(.042*accent,when+.016);bodyGain.gain.exponentialRampToValueAtTime(.0001,when+.55);
+  skin.buffer=getNoiseBuffer(ctx);skinFilter.type='bandpass';skinFilter.frequency.value=430;skinFilter.Q.value=.84;skinGain.gain.setValueAtTime(.014*accent,when);skinGain.gain.exponentialRampToValueAtTime(.0001,when+.21);
   const output=getMusicOutput(ctx);body.connect(bodyGain);bodyGain.connect(output);skin.connect(skinFilter);skinFilter.connect(skinGain);skinGain.connect(output);body.start(when);skin.start(when);body.stop(when+.52);skin.stop(when+.22);
 }
 function pifilcaNote(freq,when,duration=.52,accent=1){
   const ctx=getAudioContext();if(!ctx)return;const voice=ctx.createOscillator(),air=ctx.createOscillator(),gain=ctx.createGain(),filter=ctx.createBiquadFilter();
   voice.type='sine';voice.frequency.setValueAtTime(freq,when);voice.frequency.linearRampToValueAtTime(freq*1.008,when+duration);air.type='triangle';air.frequency.setValueAtTime(freq*2.01,when);
   gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(.018*accent,when+.055);gain.gain.setValueAtTime(.014*accent,when+Math.max(.08,duration-.12));gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
-  filter.type='lowpass';filter.frequency.value=2600;filter.Q.value=.55;voice.connect(gain);air.connect(gain);gain.connect(filter);filter.connect(getMusicOutput(ctx));voice.start(when);air.start(when);voice.stop(when+duration+.03);air.stop(when+duration+.03);
+  filter.type='lowpass';filter.frequency.value=2250;filter.Q.value=.62;voice.connect(gain);air.connect(gain);gain.connect(filter);filter.connect(getMusicOutput(ctx));voice.start(when);air.start(when);voice.stop(when+duration+.03);air.stop(when+duration+.03);
 }
 const musicPhrases=[
-  [392,440,523.25,587.33,523.25,440],[349.23,392,440,523.25,440,392],[392,0,523.25,587.33,659.25,523.25],[440,523.25,587.33,523.25,440,349.23],
-  [329.63,392,440,0,523.25,587.33],[523.25,440,392,349.23,392,440],[587.33,659.25,587.33,523.25,440,392],[392,523.25,440,349.23,329.63,392]
+  [349.23,392,466.16,523.25,0,466.16,392],[293.66,349.23,392,466.16,392,0,349.23],
+  [392,466.16,587.33,523.25,466.16,349.23,0],[311.13,0,392,440,523.25,466.16,392],
+  [349.23,440,466.16,0,587.33,523.25,440],[293.66,349.23,466.16,392,349.23,311.13,0],
+  [466.16,523.25,622.25,587.33,466.16,392,349.23],[392,0,523.25,466.16,440,349.23,293.66],
+  [311.13,392,466.16,523.25,466.16,0,311.13],[349.23,466.16,440,392,293.66,311.13,349.23]
 ];
-const musicDrums=[[0,.56,1.12,1.68,2.24,2.8],[0,.84,1.4,2.24,2.8],[0,.56,1.4,1.96,2.8],[0,.84,1.68,2.52]];
+const musicDrums=[[0,.72,1.44,2.16,3.12],[0,.48,1.2,1.92,2.64,3.36],[0,.96,1.68,2.4,3.12],[0,.72,1.2,2.16,2.88,3.36],[0,.48,1.44,2.4,3.12]];
 function musicPulse(){
   if(!soundOn||!audioCtx)return;const now=audioCtx.currentTime+.04,phrase=musicPhrases[musicStep%musicPhrases.length],drums=musicDrums[musicStep%musicDrums.length];
   drums.forEach((offset,index)=>kultrunBeat(now+offset,index===0||index===drums.length-1?1:.68));
-  phrase.forEach((freq,index)=>{if(freq)pifilcaNote(freq,now+.14+index*.5,index===phrase.length-1?.72:.52,index===0?1:.84)});musicStep++;
+  phrase.forEach((freq,index)=>{if(freq)pifilcaNote(freq,now+.18+index*.52,index===phrase.length-1?.78:.46,index===0?1:.8)});musicStep++;
 }
-function startMusic(){if(!soundOn||musicTimer)return;const ctx=getAudioContext();if(!ctx)return;const output=getMusicOutput(ctx);output.gain.cancelScheduledValues(ctx.currentTime);output.gain.setTargetAtTime(.72,ctx.currentTime,.035);musicPulse();musicTimer=setInterval(musicPulse,3440)}
+function startMusic(){if(!soundOn||musicTimer)return;const ctx=getAudioContext();if(!ctx)return;const output=getMusicOutput(ctx);output.gain.cancelScheduledValues(ctx.currentTime);output.gain.setTargetAtTime(.72,ctx.currentTime,.035);musicPulse();musicTimer=setInterval(musicPulse,4120)}
 function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}if(audioCtx&&musicOutput){musicOutput.gain.cancelScheduledValues(audioCtx.currentTime);musicOutput.gain.setTargetAtTime(.0001,audioCtx.currentTime,.025)}}
 function queltehueCall(){
   if(!soundOn)return;const ctx=getAudioContext();if(!ctx)return;const start=ctx.currentTime+.03;
@@ -1219,15 +1319,17 @@ $('#sound').onclick=()=>{soundOn=!soundOn;$('#sound').textContent=soundOn?'🔊'
 function countTypes(){const c={};world.forEach(r=>c[r.type]=(c[r.type]||0)+1);return c}
 function updateFloorCards(){
   let completed=0;
-  Object.entries(floorDefinitions).filter(([floor])=>floor!=='integrado').forEach(([floor,definition],index)=>{
+  ['andino','valle','costero'].forEach((floor,index)=>{const definition=floorDefinitions[floor];
     const card=$(`#floor-${floor}`),done=floorProgress[floor];if(done)completed++;
     card.classList.toggle('active',floor===activeFloor&&!freeMode&&!integratedMode);card.classList.toggle('done',done);
     card.querySelector('.badge').textContent=done?'✓':String(index+1);
     card.querySelector('.floorSelect').textContent=floor===activeFloor&&!freeMode&&!integratedMode?'Paisaje activo':done?'Volver a explorar':'Construir este paisaje';
   });
-  mission1Done=completed===3;const grandCompleted=(mission1Done?1:0)+(mission2Done?1:0);
-  $('#missionBtn').innerHTML=`🎯 Grandes misiones <strong>${grandCompleted}/2</strong>`;
+  mission1Done=completed===3;const mission3Done=lofProgress.social&&lofProgress.public&&lofProgress.all,grandCompleted=(mission1Done?1:0)+(mission2Done?1:0)+(mission3Done?1:0);
+  $('#missionBtn').innerHTML=`🎯 Grandes misiones <strong>${grandCompleted}/3</strong>`;
   $('#grandMission2').classList.toggle('done',mission2Done);$('#integratedMode').textContent=integratedMode?'Tablero integrado activo':mission2Done?'Volver al tablero conectado':'Construir los tres paisajes juntos';
+  $('#grandMission3').classList.toggle('done',mission3Done);
+  [['social','lofSocial'],['public','lofPublic'],['all','lofAll']].forEach(([part,floor])=>{const card=$(`#lof-${part}-card`),done=lofProgress[part];card.classList.toggle('active',activeFloor===floor&&!freeMode);card.classList.toggle('done',done);card.querySelector('.lofSelect').textContent=activeFloor===floor&&!freeMode?'Submisión activa':done?'Volver a explorar':'Comenzar submisión'});
   $('#freeMode').style.display=mission2Done?'block':'none';
 }
 function countZoneTypes(required,minK,maxK){
@@ -1241,11 +1343,38 @@ function evaluate(silent=false){
     $('#integratedProgress').textContent=`Cordillera ${andino}/${floorDefinitions.andino.required.length} · Valle ${valle}/${floorDefinitions.valle.required.length} · Costa ${costero}/${floorDefinitions.costero.required.length}\n${connected?'💧 El agua conecta los tres paisajes':'Conecta el agua dulce con el mar'}`;
     updateFloorCards();if(!silent&&mission2Done&&!wasDone){toast('🌎 ¡Completaste la Gran misión 2!');beep(840,.18);confetti(70)}return;
   }
+  if(activeFloor==='lofSocial'){
+    const c=countTypes(),found=lofSocialRequired.filter(type=>(c[type]||0)>0),elders=Math.min(2,c.elder||0),wasDone=lofProgress.social;
+    lofProgress.social=found.length===lofSocialRequired.length&&elders===2;
+    $('#progress-lofSocial').textContent=`${found.length} de ${lofSocialRequired.length} elementos · ${elders}/2 abuelos${intrusionsResolved?` · ${intrusionsResolved} animal${intrusionsResolved===1?'':'es'} devuelto${intrusionsResolved===1?'':'s'}`:''}`;
+    updateFloorCards();if(!silent&&lofProgress.social&&!wasDone){toast('🏡 ¡Completaste la vida social del lof!');beep(780,.16);confetti(45)}return;
+  }
+  if(activeFloor==='lofPublic'){
+    const c=countTypes(),found=lofPublicRequired.filter(type=>(c[type]||0)>0),chemamullCount=Math.min(2,c.chemamull||0),foyeByRewe=isNear('foye','rewe',2),kultrunByMachi=isNear('kultrun','machi',2),chemamullByEltun=isNear('chemamull','eltun',2),wasDone=lofProgress.public;
+    lofProgress.public=found.length===lofPublicRequired.length&&chemamullCount===2&&foyeByRewe&&kultrunByMachi&&chemamullByEltun;
+    $('#progress-lofPublic').textContent=`${found.length} de ${lofPublicRequired.length} elementos · ${chemamullCount}/2 chemamüll · ${foyeByRewe?'✓ foye/rewe':'foye/rewe'} · ${kultrunByMachi?'✓ kultrung/machi':'kultrung/machi'} · ${chemamullByEltun?'✓ chemamüll/eltun':'chemamüll/eltun'}`;
+    updateFloorCards();if(!silent&&lofProgress.public&&!wasDone){toast('🥁 ¡Completaste el espacio público y ceremonial!');beep(860,.18);confetti(55)}return;
+  }
+  if(activeFloor==='lofAll'){
+    const used=new Set();world.forEach(record=>{if(record.j>0&&pieces[record.type])used.add(pieces[record.type].cat)});const wasDone=lofProgress.all;
+    lofProgress.all=categories.every(([id])=>used.has(id));
+    $('#progress-lofAll').textContent=`${used.size} de ${categories.length} categorías utilizadas`;
+    updateFloorCards();if(!silent&&lofProgress.all&&!wasDone){toast('🎨 ¡Completaste el paisaje libre del lof!');beep(900,.18);confetti(60)}return;
+  }
   const c=countTypes(),definition=floorDefinitions[activeFloor],found=definition.required.filter(type=>(c[type]||0)>0),wasDone=floorProgress[activeFloor];
   $(`#progress-${activeFloor}`).textContent=`${found.length} de ${definition.required.length} elementos esenciales`;
   if(found.length===definition.required.length)floorProgress[activeFloor]=true;
   updateFloorCards();if(!silent&&floorProgress[activeFloor]&&!wasDone){toast(`¡Küme! Completaste el ${definition.label.toLowerCase()}`);beep(720,.14);confetti(mission1Done?60:28);renderTabs();renderItems()}
 }
+function spawnLofIntruder(){
+  if(activeFloor!=='lofSocial'||freeMode||[...world.values()].some(record=>record.intruder))return false;
+  const villageCount=[...world.values()].filter(record=>record.j>0&&!['forest','hill','puma','fox'].includes(record.type)).length;if(villageCount<4){nextIntrusionAt=Date.now()+8000;return false}
+  const candidates=[];for(let k=7;k<=10;k++)for(let i=1;i<N-1;i++)if(!world.has(key(i,1,k))&&!getMoversAtCell(i,k).length)candidates.push({i,k});
+  if(!candidates.length){nextIntrusionAt=Date.now()+10000;return false}
+  const cell=candidates[Math.floor(Math.random()*candidates.length)],type=Math.random()<.5?'fox':'puma';place(cell.i,1,cell.k,type);const record=world.get(key(cell.i,1,cell.k));record.intruder=true;nextIntrusionAt=Infinity;showObjectIndicator({mesh:record.mesh},'suggestion',7000);toast(`⚠️ Apareció ${pieces[type].mapu}: llévalo al borde natural`);beep(310,.2);evaluate(true);return true;
+}
+function updateLofIntrusion(){if(activeFloor==='lofSocial'&&!freeMode&&Date.now()>=nextIntrusionAt)spawnLofIntruder()}
+window.spawnLofIntruder=spawnLofIntruder;
 function confetti(n){
   const colors=['#a94332','#d89a35','#4a9ac2','#fff7e7','#4f8b45','#241a13'];
   for(let i=0;i<n;i++){const d=document.createElement('div');d.className='confetti';d.style.left=Math.random()*100+'vw';d.style.background=colors[i%colors.length];d.style.animationDuration=(1.1+Math.random()*1.2)+'s';app.appendChild(d);setTimeout(()=>d.remove(),2500)}
@@ -1260,6 +1389,7 @@ function act(x,y){
   const c=hit.object.userData;let feedback=null;
   if(deleting){
     if(c.j===0){toast('La base del paisaje no se borra');return}
+    if(c.record&&c.record.intruder){toast('Este animal debe volver manualmente al borde natural');return}
     if(c.record&&getHostedMovers(c.i,c.k).length&&!movableTypes.has(c.record.type)){toast('Primero mueve fuera a quienes están en ese lugar');return}
     const removed=remove(c.i,c.j,c.k);if(removed)undoStack.push({op:'add',i:c.i,j:c.j,k:c.k,type:removed.type,rotation:removed.rotation});
   }else if(c.record&&movableTypes.has(c.record.type)){
@@ -1340,7 +1470,7 @@ let lastFrameTime=performance.now();
 function loop(now){
   requestAnimationFrame(loop);const delta=Math.min(.05,Math.max(0,(now-lastFrameTime)/1000));lastFrameTime=now;
   if(!pageVisible)return;
-  const time=now/1000;updateActiveMovement(delta);animated.forEach(entry=>animateEntry(entry,time,delta));updateClouds(delta);updateRainCloud(delta);updateIndicators(time);
+  const time=now/1000;updateActiveMovement(delta);updateLofIntrusion();animated.forEach(entry=>animateEntry(entry,time,delta));updateClouds(delta);updateRainCloud(delta);updateIndicators(time);
   if(selectedMover){moverRing.position.x=selectedMover.mesh.position.x;moverRing.position.z=selectedMover.mesh.position.z;moverRing.scale.setScalar(1+Math.sin(time*4)*.06)}
   if(destinationRing.visible)destinationRing.scale.setScalar(1+Math.sin(time*5)*.1);renderer.render(scene,camera);
 }

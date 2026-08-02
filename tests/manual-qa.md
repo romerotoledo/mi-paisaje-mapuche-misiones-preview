@@ -1,6 +1,6 @@
 # Validación interactiva
 
-Fecha: 31 de julio de 2026.
+Fecha: 2 de agosto de 2026.
 
 Se ejecutó `index.html` desde un servidor HTTP local y se controló la página en un navegador Chromium sin modificar el código de producción.
 
@@ -29,6 +29,19 @@ Se ejecutó `index.html` desde un servidor HTTP local y se controló la página 
 - Los anillos de selección y destino, el estado “va en camino” y los mensajes de llegada se mostraron correctamente.
 - La consola de la página permaneció sin errores ni advertencias durante los desplazamientos. Los únicos mensajes ajenos observados provenían de una extensión del navegador y no de la página.
 - La nueva frase musical de kultrun y pifilca sintetizados se activó después de una interacción, completó más de un ciclo y pudo apagarse y encenderse nuevamente sin errores de la página.
+- La Gran misión 3 se abrió correctamente en 390 × 844 px y 1280 × 800 px, con sus dos submisiones y el contador general 0/3.
+- Vida social del lof mostró las siete categorías y todos los elementos previos, además de dawe o quinoa. La franja de bosque que representa el medio natural quedó visible.
+- Después de construir cuatro rukas de prueba apareció un Ngürü cerca del poblado. No pudo borrarse, se seleccionó tocando su figura y se desplazó hasta el borde natural; el progreso registró “1 animal devuelto”.
+- Espacio público y ceremonial mostró Rewe, Kultrung, Kuel, Foye, Machi, Lonko, Ketru metawe y Meñkuwe. El jarro-pato se colocó realmente en el tablero y actualizó el progreso.
+- La categoría social incluye Kona y Toki, ambos móviles, y la misión de vida social exige dos personas mayores para representar a los abuelos.
+- El corral de empalizada acepta solamente gallinas y chiliweke; los animales silvestres no pueden ocuparlo y el malal comunitario se mantiene separado.
+- Consola sin errores ni advertencias durante las pruebas de ambas submisiones, aparición silvestre, movimiento y colocación de cerámica.
+- La Gran misión 3 muestra ahora tres submisiones en móvil; el panel sigue siendo desplazable y los botones conservan una altura táctil adecuada.
+- Eltun y Chemamüll aparecen en Ceremoniales. Ambos se colocaron realmente en casillas vecinas y el progreso reconoció la relación `chemamüll/eltun` y el conteo 1/2.
+- La representación del eltun utiliza montículos, vegetación y un borde de piedras, sin cruces genéricas; el chemamüll se representa como una figura antropomorfa tallada en madera.
+- Paisaje completo abrió las siete categorías y mostró el progreso `0 de 7 categorías utilizadas`, sin restringir la biblioteca de elementos.
+- Se activó la nueva composición y se dejó correr más de un ciclo de 4,12 segundos sin errores ni advertencias de consola.
+- El registro de animaciones incluye todos los tipos de personajes humanos y aplica respiración, balanceo corporal y cambio mínimo de apoyo cuando están quietos.
 
 ## Validado automáticamente
 

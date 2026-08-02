@@ -41,6 +41,12 @@ assert.equal(relations.gridDistance(object('a',0,0),object('b',3,4)),5);
 }
 
 {
+  const crop=object('quinoa',3,3),objects=[crop,object('water',3,1),object('ruka',4,3)];
+  const result=relations.evaluateLandscapeRelations(objects).relations.find(item=>item.object===crop&&item.id==='crop-organization');
+  assert.equal(result.state,'good');
+}
+
+{
   const machi=object('machi',7,7,'ceremonial'),objects=[machi,object('lonko',8,7,'ceremonial'),object('foye',7,9,'ceremonial')];
   const result=relations.evaluateLandscapeRelations(objects).relations.find(item=>item.object===machi&&item.id==='ceremonial-cluster');
   assert.equal(result.state,'good');
@@ -58,6 +64,15 @@ assert.equal(relations.animalHabitatAllows('whale',4,9,true,'integrado'),true);
 assert.equal(relations.animalHabitatAllows('whale',4,5,true,'integrado'),false);
 assert.equal(relations.animalHabitatAllows('pudu',4,4,false,'valle'),true);
 assert.equal(relations.animalHabitatAllows('pudu',4,4,false,'andino'),false);
+assert.ok(relations.CEREMONIAL_TYPES.includes('ketruMetawe'));
+assert.ok(relations.CEREMONIAL_TYPES.includes('menkuwe'));
+assert.ok(relations.CEREMONIAL_TYPES.includes('eltun'));
+assert.ok(relations.CEREMONIAL_TYPES.includes('chemamull'));
+
+{
+  const eltun=object('eltun',4,4,'ceremonial'),chemamull=object('chemamull',5,4,'ceremonial');
+  assert.equal(relations.isNear([eltun,chemamull],'chemamull','eltun',2),true);
+}
 
 {
   const puma=object('puma',4,4),pudu=object('pudu',6,4),condor=object('condor',9,9);
