@@ -1,0 +1,16 @@
+{
+  "name": "mi-paisaje-mapuche",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Juego educativo 3D (vóxeles) para que niños armen el paisaje mapuche precolombino y aprendan mapuzugun. Proyecto FONDECYT 1231127, dirigido por el Dr. Hugo Romero-Toledo.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node tests/validate.mjs && node --test tests/relations.test.cjs",
+    "test:validate": "node tests/validate.mjs",
+    "test:relations": "node --test tests/relations.test.cjs",
+    "serve": "node --version >/dev/null && python3 -m http.server 8000"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

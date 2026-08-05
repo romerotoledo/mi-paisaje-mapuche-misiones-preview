@@ -72,6 +72,12 @@ Se ejecutó `index.html` desde un servidor HTTP local y se controló la página 
 
 ## Pendiente en dispositivos físicos
 
+- Completar una etapa de cada Gran misión y confirmar que el repaso muestra tres preguntas con dibujo, español, alternativas en mapudungun, corrección y resultado final.
+- Recorrer las siete etapas con **Siguiente etapa** sin completar requisitos y confirmar que ningún tablero queda bloqueado.
+
+- Escuchar completos los tres nuevos paisajes sonoros y ajustar con el autor el balance entre percusión, madera, voz de aire, textura ambiental y silencios.
+- Someter la propuesta musical a co-diseño y validación con músicos y cultores mapuche antes de presentarla como una identidad sonora culturalmente validada.
+
 - Confirmar pellizco multitáctil, zonas seguras y cambio de orientación en Safari sobre iPhone e iPad reales.
 - Confirmar sesiones largas y presión de memoria en un iPhone de gama baja; una prueba Chromium de escritorio no puede certificar que Safari móvil nunca cierre la pestaña.
 - Comprobar Android y tablets físicas.

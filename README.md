@@ -2,6 +2,12 @@
 
 Vista previa jugable con tres grandes misiones ecológicas y comunitarias.
 
+La entrada incluye una guía breve de tres pasos, controles móviles simplificados y un acompañante de vocabulario. Cada pieza seleccionada, colocada o desplazada refuerza su nombre en mapuzugun y registra localmente las palabras descubiertas. La guía puede abrirse nuevamente desde el botón `?`; la pronunciación continúa identificada como sintética y pendiente de validación por hablantes.
+
+En computador, el tablero se navega directamente con el mouse: arrastrar con el botón izquierdo rota la cámara en horizontal y vertical, y la rueda acerca o aleja con una transición suave. Un clic breve conserva la acción de colocar o seleccionar elementos.
+
+Durante la revisión del prototipo, el botón **Siguiente etapa** permite recorrer libremente los siete tableros sin cumplir primero sus requisitos. Cuando una etapa sí se completa, aparece un repaso de tres preguntas: el juego muestra el dibujo y el nombre en español, el jugador elige el término correspondiente en mapudungun y recibe corrección y pronunciación inmediatas.
+
 En la **Gran misión 1 · Conociendo el paisaje**, el jugador construye por separado tres pisos ecológicos:
 
 1. Paisaje andino: cerros, volcán, bosque de araucarias de copa aparasolada, cóndor y puma.
@@ -24,9 +30,9 @@ El paisaje también tiene ciclos ambientales intermitentes: una nube cruza el ta
 
 Cada vez que se completa un paisaje, una submisión o una Gran misión, el juego muestra una celebración consistente: aviso explícito, acorde de logro y confeti abundante. Las celebraciones de cierre de Gran misión son más intensas.
 
-Las tarjetas muestran los nombres en mapudungun y español. Al tocarlas, la voz lee solamente el nombre mapudungun; la pronunciación sintética es una guía aproximada pendiente de validación por hablantes. El queltehue incorpora además un llamado de alerta sintetizado.
+Las tarjetas muestran los nombres en mapudungun y español. Al tocarlas, la voz lee solamente el nombre mapudungun. El motor prioriza voces naturales o neuronales latinoamericanas, evita voces compactas o robóticas, adapta el ritmo a la longitud del término y baja temporalmente la música para mejorar la claridad. La pronunciación continúa siendo una guía aproximada pendiente de validación por hablantes. El queltehue incorpora además un llamado de alerta sintetizado.
 
-Cada Gran misión posee una música original diferente. Las tres composiciones combinan golpes sintetizados de tambor con llamadas inspiradas en la trutruka y emplean seis frases, seis patrones rítmicos y duraciones variables por misión para reducir la monotonía. No reproducen cantos ni melodías ceremoniales ni sustituyen una interpretación musical validada culturalmente.
+Las tres Grandes misiones comparten ahora una idea musical simple y épica: un tambor grave, un llamado sintético de cuatro notas, un fondo sostenido y silencio entre frases. Cada misión conserva seis variaciones del motivo con distinta altura y velocidad, pero sin acumular capas ni texturas ambientales. El sistema no reproduce cantos ni melodías ceremoniales y sigue siendo una propuesta experimental que requiere co-diseño y validación con músicos y cultores mapuche.
 
 Todos los personajes humanos tienen respiración, giro de cabeza y un cambio suave de apoyo corporal, además de conservar su desplazamiento manual por el tablero.
 
